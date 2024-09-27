@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+<style>
+    /* Content sections (Artists, Albums, Podcasts) */
+    .container .div-right .Artists,
+    .container .div-right .Albums,
+    .container .div-right .Podcasts {
+        background-color: #333;
+        border-radius: 25px;
+        height: 150px;
+        width: 100%; /* Full width */
+    }
+
+        .container .div-right .Artists h4,
+        .container .div-right .Albums h4,
+        .container .div-right .Podcasts h4 {
+            margin: 5px;
+            margin-left: 12px;
+            padding: 0;
+        }
+</style>
+<div class="container">
+    @await Html.PartialAsync("_leftDiv")
+    <div class="div-right">
+        @await Html.PartialAsync("_rightDiv")
+        <div class="Artists">
+            <h4>Artists</h4>
+
+        </div>
+        <div class="Albums">
+            <h4>Albums</h4>
+        </div>
+        <div class="Podcasts">
+            <h4>Podcasts</h4>
+        </div>
+    </div>
+</div>
