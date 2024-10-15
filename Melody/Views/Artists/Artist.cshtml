@@ -1,0 +1,661 @@
+﻿@model Melody.Models.Artist
+@* @using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@{
+    var userId = UserManager.GetUserId(User); // Retrieve the currently logged-in user's ID
+} *@
+@{
+    ViewData["Title"] = "Artist";
+    var songNumber = 1; // Initialize a counter for the serial number
+}
+<style>
+    .artist {
+        display: flex;
+        background-color: #333;
+        border-radius: 25px;
+        height: auto;
+        width: 100%;
+        gap: 7px;
+        flex-direction: column;
+    }
+
+    .artist-image {
+        width: 100%;
+        height: 320px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+    }
+
+    .artist .artist-image h1 {
+        display: flex;
+        align-items: flex-end;
+    }
+
+    .image {
+        object-fit: cover;
+        width: 300px;
+        height: 300px;
+        border-radius: 25px;
+        border: 2px solid #5fd068;
+    }
+
+    .div-right {
+        max-width: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        height: auto;
+    }
+
+    .album-controls {
+        display: flex;
+        flex-direction: row;
+        gap: 7px;
+    }
+
+    .play-all-btn {
+        width: 60px;
+        height: 60px;
+        position: relative;
+        border-radius: 50%;
+        padding-top: 0px;
+        padding: 7px;
+    }
+
+    .play-btn {
+        position: absolute;
+        appearance: none;
+        width: 80%;
+        height: 80%;
+        border-radius: 50%;
+        background: conic-gradient(#ff6347, #ff6347);
+        cursor: pointer;
+        outline: none;
+    }
+
+        .play-btn::before {
+            content: "";
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            background-color: #000;
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .play-btn:checked {
+            animation: borderAnimate 700ms ease-in-out 1;
+            animation-fill-mode: forwards;
+        }
+
+    @@keyframes borderAnimate {
+        0% {
+            transform: rotate(0);
+            background: conic-gradient(#ff6347, transparent 20%);
+        }
+
+        80% {
+            background: conic-gradient(#ff6347, transparent 90%);
+        }
+
+        100% {
+            transform: rotate(360deg);
+            background: conic-gradient(#ff6347, #ff6347);
+        }
+    }
+
+    .play-all-icon {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        left: 65%;
+        top: 53%;
+        background-color: #ff6347;
+        transform: translate(-60%, -50%) rotate(90deg);
+        clip-path: polygon(50% 15%, 0% 100%, 100% 100%);
+        transition: all 400ms ease-in-out;
+        cursor: pointer;
+    }
+
+    .play-btn:checked + .play-all-icon {
+        clip-path: polygon(0 100%, 0% 100%, 100% 100%);
+    }
+
+    .pause-all-icon {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        left: 55%;
+        top: 53%;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+    }
+
+        .pause-all-icon::before {
+            content: "";
+            position: absolute;
+            width: 0%;
+            height: 100%;
+            background-color: #ff6347;
+            left: 0;
+        }
+
+        .pause-all-icon::after {
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 100%;
+            background-color: #ff6347;
+            right: 0;
+        }
+
+    .play-btn:checked ~ .pause-all-icon::before {
+        animation: reveal 300ms ease-in-out 350ms 1;
+        animation-fill-mode: forwards;
+    }
+
+    .play-btn:checked ~ .pause-all-icon::after {
+        animation: reveal 300ms ease-in-out 600ms 1;
+        animation-fill-mode: forwards;
+    }
+
+    @@keyframes reveal {
+        0% {
+            width: 0;
+        }
+
+        100% {
+            width: 35%;
+        }
+    }
+
+    .follow-div {
+        display: flex;
+        align-items: center;
+    }
+
+    .follow-btn {
+        outline: none;
+        cursor: pointer;
+        border: none;
+        padding: 0.9rem 2rem;
+        margin: 0;
+        font-family: inherit;
+        font-size: inherit;
+        position: relative;
+        display: flex;
+        letter-spacing: 0.05rem;
+        font-weight: 700;
+        font-size: 17px;
+        border-radius: 500px;
+        overflow: hidden;
+        background: #66ff66;
+        color: ghostwhite;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        width: 114px;
+        height: 30px;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .follow-btn span {
+            position: relative;
+            z-index: 10;
+            transition: color 0.4s;
+        }
+
+        .follow-btn:hover span {
+            color: black;
+        }
+
+        .follow-btn::before,
+        .follow-btn::after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .follow-btn::before {
+            content: "";
+            background: #000;
+            width: 120%;
+            left: -10%;
+            transform: skew(30deg);
+            transition: transform 0.4s cubic-bezier(0.3, 1, 0.8, 1);
+        }
+
+        .follow-btn:hover::before {
+            transform: translate3d(100%, 0, 0);
+        }
+
+
+    .songs-list {
+        margin: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .song-item {
+        display: flex;
+        flex-direction: row;
+        gap: 25px;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 100%;
+        height: 70px;
+        border-radius: 25px;
+        background-color: #212121;
+        padding: 10px;
+        box-sizing: border-box;
+        overflow: hidden;
+        position: relative; /* Position relative for absolute positioning of menu */
+    }
+
+    .song-left {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        width: 400px;
+    }
+
+    .song-middle {
+        width: 800px;
+    }
+
+    .song-right {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 20px;
+        white-space: nowrap;
+        width: 120px;
+    }
+
+    .serial-number {
+        margin-right: 15px;
+        color: white;
+    }
+
+    .album-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 5px;
+        object-fit: cover;
+        margin-right: 15px;
+    }
+
+    .song-heading {
+        display: flex;
+        flex-direction: row;
+        margin-left: 15px;
+        height: 35px;
+    }
+
+        .song-heading .song-title {
+            margin-left: 75px;
+            width: 305px;
+        }
+
+        .song-heading .song-album {
+            width: 650px;
+        }
+
+        .song-heading .song-duration {
+            margin-left: 80px;
+            width: 50px;
+        }
+
+    .divider {
+        border: 1px solid white;
+        margin: 0;
+    }
+
+    .song-name {
+        color: white;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .play-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .duration {
+        color: white;
+    }
+
+    .ellipsis-menu {
+        cursor: pointer;
+        font-size: 24px;
+        color: white;
+        position: relative;
+    }
+
+    .menu-options {
+        display: none; /* Initially hidden */
+        position: absolute;
+        right: 0;
+        top: 30px;
+        background-color: #444;
+        border-radius: 5px;
+        width: 150px;
+        z-index: 10;
+    }
+
+        .menu-options ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .menu-options ul li {
+                padding: 10px;
+                color: white;
+                cursor: pointer;
+            }
+
+                .menu-options ul li:hover {
+                    background-color: #555;
+                }
+
+        /* Divider for menu options */
+        .menu-options .divider {
+            border-top: 1px solid #666;
+            margin: 5px 0;
+        }
+
+        /* Hide the menu options by default */
+        .menu-options.hidden {
+            display: none;
+        }
+
+    .play-action {
+        --color: #ffffff;
+        --size: 45px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        position: relative;
+        cursor: pointer;
+        font-size: var(--size);
+        user-select: none;
+        fill: var(--color);
+    }
+
+        .play-action .play {
+            position: absolute;
+            display: none; /* Display the play icon by default */
+            animation: keyframes-fill 0.3s;
+        }
+
+        .play-action .pause {
+            position: absolute;
+            display: block; /* Hide the pause icon by default */
+            animation: keyframes-fill 0.3s;
+        }
+
+        .play-action input:checked ~ .play {
+            display: block;
+        }
+
+        .play-action input:checked ~ .pause {
+            display: none;
+        }
+
+        .play-action input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+    @@keyframes keyframes-fill {
+        0% {
+            transform: scale(0.5);
+            opacity: 0;
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+    }
+</style>
+
+<div class="container">
+    @await Html.PartialAsync("_leftDiv")
+    <div class="div-right">
+        @await Html.PartialAsync("_rightDiv")
+        <div class="artist">
+            <div class="artist-image">
+                <img src="~/images/@Model.ImagePath" alt="@Model.Name" class="image" />
+                <h1>@Model.Name</h1>
+            </div>
+            <div class="album-controls">
+                <!-- Album controls can go here -->
+                <div class="play-all-btn">
+                    <label>
+                        <input class="play-btn" type="checkbox" id="play-all-toggle">
+                        <div class="play-all-icon"></div>
+                        <div class="pause-all-icon"></div>
+                    </label>
+                </div>
+                <div class="follow-div">
+                    <button class="follow-btn" id="follow-btn" onclick="toggleFollow()">
+                        <span id="follow-text">Follow</span>
+                    </button>
+                    @* <button class="follow-btn" id="follow-btn" onclick="toggleFollow(@Model.ArtistId, @userId)">
+                    <span id="follow-text">Follow</span>
+                    </button> *@
+                </div>
+
+            </div>
+            <div class="song-heading">
+                <h4>#</h4>
+                <div class="song-title">
+                    <h4>Title</h4>
+                </div>
+                <div class="song-album">
+                    <h4>Album</h4>
+                </div>
+                <div class="song-duration">
+                    <h4>Duration</h4>
+                </div>
+            </div>
+            <hr class="divider">
+            <div class="songs-list">
+                @foreach (var song in Model.Songs)
+                {
+                    <div class="song-item">
+                        <!-- Left Div -->
+                        <div class="song-left">
+                            <span class="serial-number">@songNumber.</span>
+                            <img src="~/images/@Model.ImagePath" alt="Album Image" class="album-image" />
+                            <h3 class="song-name">@song.Name</h3>
+                        </div>
+
+                        <!-- Middle Div (Album Name) -->
+                        <div class="song-middle">
+                            <h3 class="song-name">@song.Album?.Title</h3>
+                        </div>
+
+                        <!-- Right Div (Play Button, Duration, Ellipsis Menu) -->
+                        <div class="song-right">
+                            <div class="play-button">
+                                <label class="play-action">
+                                    <input type="checkbox" id="play-toggle-@song.SongId" onclick="togglePlay('@song.SongId', '@song.FilePath')" />
+                                    <svg viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="pause" id="pause-icon-@song.SongId">
+                                        <path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"></path>
+                                    </svg>
+                                    <svg viewBox="0 0 320 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="play" id="play-icon-@song.SongId">
+                                        <path d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z"></path>
+                                    </svg>
+                                </label>
+                            </div>
+                            <span class="duration" id="duration-@song.SongId">00:00</span> <!-- Duration -->
+                            <div class="ellipsis-menu" onclick="toggleMenu(@song.SongId)">
+                                <div class="menu-options hidden" id="menu-options-@song.SongId">
+                                    <ul>
+                                        <li>Add to Playlist</li>
+                                        <div class="divider"></div>
+                                        <li>Share</li>
+                                        <div class="divider"></div>
+                                        <li>Download</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Hidden audio element to play the song -->
+                        <audio id="audio-@song.SongId" src="~/songs/@song.FilePath"></audio>
+                    </div>
+                    songNumber++;
+                    <!-- Increment the song serial number -->
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentSong = null; // Store currently playing song
+    let currentIndex = -1; // Track the index of the current song in the array
+    let songElements = []; // Store all audio elements
+
+    // Initialize the song elements once the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', function () {
+        songElements = Array.from(document.querySelectorAll('audio'));
+    });
+
+    function togglePlay(songId, filePath) {
+        const audioElement = document.getElementById(`audio-${songId}`);
+        const playIcon = document.getElementById(`play-icon-${songId}`);
+        const pauseIcon = document.getElementById(`pause-icon-${songId}`);
+        const playAllCheckbox = document.getElementById('play-all-toggle');
+
+        if (currentSong && currentSong !== songId) {
+            // Pause the current song and revert the play/pause icon
+            const currentAudio = document.getElementById(`audio-${currentSong}`);
+            currentAudio.pause();
+            document.getElementById(`play-icon-${currentSong}`).style.display = 'none'; // Hide play icon
+            document.getElementById(`pause-icon-${currentSong}`).style.display = 'block'; // Show pause icon
+            document.getElementById(`play-toggle-${currentSong}`).checked = false; // Reset checkbox state
+        }
+
+        // If Play All is active, deactivate it when an individual song is played
+        if (playAllCheckbox.checked) {
+            playAllCheckbox.checked = false; // Revert "Play All" button to default state
+            stopAllSongs(); // Stop all songs if any are playing under Play All
+        }
+
+        if (audioElement.paused) {
+            // Play the clicked song
+            audioElement.play();
+            playIcon.style.display = 'block'; // Show play icon when playing
+            pauseIcon.style.display = 'none'; // Hide pause icon
+            currentSong = songId; // Update current song ID
+        } else {
+            // Pause the song
+            audioElement.pause();
+            playIcon.style.display = 'none'; // Hide play icon
+            pauseIcon.style.display = 'block'; // Show pause icon when paused
+            currentSong = null; // Reset current song ID
+        }
+    }
+
+    function togglePlayAll() {
+        const playAllCheckbox = document.getElementById('play-all-toggle');
+        const isPlaying = playAllCheckbox.checked;
+
+        if (isPlaying) {
+            // Stop any individual song playing
+            if (currentSong) {
+                const currentAudio = document.getElementById(`audio-${currentSong}`);
+                currentAudio.pause();
+                document.getElementById(`play-icon-${currentSong}`).style.display = 'none'; // Hide play icon
+                document.getElementById(`pause-icon-${currentSong}`).style.display = 'block'; // Show pause icon
+                document.getElementById(`play-toggle-${currentSong}`).checked = false; // Reset checkbox state
+                currentSong = null; // Reset current song ID
+            }
+            currentIndex = 0; // Start from the first song
+            playNextSong();
+        } else {
+            // Stop all songs if the play-all button is unchecked
+            stopAllSongs();
+            currentSong = null; // Reset current song ID
+            currentIndex = -1; // Reset index
+        }
+    }
+
+    function stopAllSongs() {
+        songElements.forEach((audio, index) => {
+            audio.pause();
+            document.getElementById(`play-icon-${index + 1}`).style.display = 'none'; // Hide play icons
+            document.getElementById(`pause-icon-${index + 1}`).style.display = 'block'; // Show pause icons
+        });
+    }
+
+    function toggleFollow() {
+        const followBtn = document.getElementById('follow-btn');
+        const followText = document.getElementById('follow-text');
+
+        if (followText.innerText === 'Follow') {
+            followText.innerText = 'Following';
+            followBtn.classList.add('following');
+        } else {
+            followText.innerText = 'Follow';
+            followBtn.classList.remove('following');
+        }
+    }
+
+
+    function playNextSong() {
+        if (currentIndex >= 0 && currentIndex < songElements.length) {
+            const currentAudio = songElements[currentIndex];
+            const playIcon = document.getElementById(`play-icon-${currentIndex + 1}`);
+            const pauseIcon = document.getElementById(`pause-icon-${currentIndex + 1}`);
+
+            // Play the current song
+            currentAudio.play();
+            playIcon.style.display = 'block'; // Show play icon
+            pauseIcon.style.display = 'none'; // Hide pause icon
+
+            currentAudio.onended = function () {
+                // Move to the next song
+                playIcon.style.display = 'none'; // Hide play icon
+                pauseIcon.style.display = 'block'; // Show pause icon
+                currentIndex++; // Increment index
+                if (currentIndex < songElements.length) {
+                    playNextSong(); // Play the next song
+                } else {
+                    document.getElementById('play-all-toggle').checked = false; // Uncheck play-all checkbox
+                    currentIndex = -1; // Reset index
+                }
+            };
+        }
+    }
+
+    document.getElementById('play-all-toggle').addEventListener('change', togglePlayAll);
+</script>
+
+
+<!-- Add CSRF token form helper -->
+<form asp-antiforgery="true">
+    <input type="hidden" name="__RequestVerificationToken" value="@Html.AntiForgeryToken()" />
+</form>

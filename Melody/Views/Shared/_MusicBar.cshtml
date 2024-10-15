@@ -1,0 +1,17 @@
+﻿<!-- Music Control Bar -->
+<div id="music-control-bar" class="music-control-bar">
+    <div class="control-content">
+        <div class="track-info">
+            <span id="track-title">No song playing</span>
+        </div>
+        <div class="controls">
+            <button id="play-pause-btn" onclick="togglePlayPause()">
+                <span id="play-pause-icon">▶️</span> <!-- Default play icon -->
+            </button>
+            <input id="progress-bar" type="range" min="0" max="100" value="0" step="1">
+        </div>
+        <div class="volume-control">
+            <input id="volume-bar" type="range" min="0" max="1" step="0.1" value="1">
+        </div>
+    </div>
+</div>

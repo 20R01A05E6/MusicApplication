@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 namespace Melody.Models
 {
     public class Channel
@@ -7,12 +6,14 @@ namespace Melody.Models
         [Key]
         public int ChannelId { get; set; }
 
-        [Required, StringLength(100)]
+        [Required]
+        [MaxLength(100)]
         public string Name { get; set; }
 
+        [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
 
-        // Navigation Property
-        public ICollection<ChannelPodcasts> ChannelPodcasts { get; set; }
+        // Relationships
+        public ICollection<ChannelPodcast> ChannelPodcasts { get; set; }
     }
 }

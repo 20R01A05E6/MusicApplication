@@ -1,3 +1,4 @@
+/* Base Styles */
 @media (min-width: 768px) {
     html {
         font-size: 16px;
@@ -7,6 +8,7 @@
 * {
     font-family: "Damion", cursive;
 }
+
 body {
     font-size: 14px;
     background-color: black;
@@ -14,7 +16,6 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    
 }
 
 .container {
@@ -25,51 +26,90 @@ body {
     flex-grow: 1; /* Take remaining height */
 }
 
-/* Left div styling */
-.container .div-left {
-    background-color: black;
-    color: white;
-    width: 225px; /* Fixed width for the left div */
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Space between elements */
-    padding-left:5px;
-    padding-top:10px;
-    padding-bottom:10px;
-}
+    /* Left div styling */
+    .container .div-left {
+        background-color: black;
+        color: white;
+        width: 225px; /* Fixed width for the left div */
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding-left: 5px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
 .company-logo {
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
+
     .company-logo .logo {
         width: 225px;
         height: 80px;
         border-radius: 25px;
-        object-fit: cover; /* Ensure the image fits the circle properly */
-    }
-    /* Individual sections in the left div */
-    .container .div-left .l1,
-    .container .div-left .l2 {
-        background-color: #333;
-        padding: 7px;
-        border-radius: 25px;
+        object-fit: cover;
+        margin-top: 0px;
     }
 
-    .container .div-left .l1 {
-        height: 225px;
-    }
+.home {
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+}
+
+.home-logo {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 15px;
+}
+
+.home-logo-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.footer-logo {
+    padding: 5px;
+    width: 150px;
+    height: 60px;
+    border-radius: 25px;
+    object-fit: cover;
+}
+
+/* Individual sections in the left div */
+.container .div-left .l1 {
+    background-color: #333;
+    padding-left: 7px;
+    padding-right: 7px;
+    padding-down: 7px;
+    border-radius: 25px;
+}
+
+.container .div-left .l2 {
+    background-color: #333;
+    padding: 7px;
+    border-radius: 25px;
+}
+
+.container .div-left .l1 {
+    height: 225px;
+}
 
 /* Right div styling */
 .container .div-right {
-    flex-grow: 1; /* Ensures the right side takes remaining space */
+    flex-grow: 1;
     background-color: black;
     color: white;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width:stretch;
-    padding:10px;
+    width: stretch;
+    padding: 10px;
 }
 
     /* Navbar styling */
@@ -78,30 +118,27 @@ body {
         border-radius: 25px;
         height: 50px;
         display: flex;
-        justify-content: flex-end; /* Align navbar buttons to the right */
-        gap: 50px; /* Space between buttons */
-        padding-right: 10px; /* Add padding to the right to avoid edge alignment */
+        justify-content: flex-end;
+        gap: 50px;
+        padding-right: 10px;
     }
-
 
 /* Profile icon container */
 .profile-icon-container {
-    margin-right:10px;
+    margin-right: 10px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    cursor: pointer;
 }
 
-/* Corrected Profile Icon Styling */
 .profile-icon {
-    width: 40px; /* Set the proper width of the profile icon */
-    height: 40px; /* Set the proper height of the profile icon */
-    border-radius: 50%; /* Make the profile icon circular */
-    border: 2px solid #5fd068; /* Add a white border around the icon */
-    object-fit: cover; /* Ensure the image fits the circle properly */
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #5fd068;
+    object-fit: cover;
 }
-
-
 
 .div-right .div-navbar .button {
     color: white;
@@ -131,19 +168,23 @@ body {
         width: 100%;
     }
 
-.button .bell {
-    width: 18px;
+.button {
+    cursor: pointer;
 }
 
-    .button .bell path {
-        fill: white;
+    .button .bell {
+        width: 18px;
     }
+
+        .button .bell path {
+            fill: white;
+        }
 
     .button:hover .bell {
         animation: bellRing 0.9s both;
     }
 
-/* bell ringing animation keyframes*/
+/* bell ringing animation keyframes */
 @keyframes bellRing {
     0%, 100% {
         transform-origin: top;
@@ -175,9 +216,7 @@ body {
 }
 
 /* Footer styling */
-
 .footer {
-    
     bottom: 0;
     white-space: nowrap;
     line-height: 30px;
@@ -189,37 +228,121 @@ body {
     flex-shrink: 1;
     display: flex;
     flex-direction: column;
-}
-.row{
-    display:flex;
-    flex-direction:row;
-    justify-items:flex-start;
-    gap:275px;
-}
-.footer {
-    margin-top: auto;
+    height: 400px;
 }
 
-    .footer h3 {
-        font-size: 1.1em;
-        font-weight: bold;
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-items: flex-start;
+    gap: 250px;
+}
+
+.footer h3 {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.footer ul {
+    padding-left: 0;
+    list-style: none;
+}
+
+    .footer ul li a {
+        color: #ccc;
+        text-decoration: none;
     }
 
-    .footer ul {
-        padding-left: 0;
-        list-style: none;
-    }
-
-        .footer ul li a {
-            color: #ccc;
-            text-decoration: none;
+        .footer ul li a:hover {
+            color: greenyellow;
         }
 
+/* Responsive Design - Media Queries */
 
-            .footer ul li a:hover {
-                color: greenyellow;
+/* Tablet view - Adjusts layout and font sizes */
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .div-left {
+        width: 100%; /* Full width on tablet */
+        padding: 10px;
+    }
+
+    .company-logo .logo {
+        width: 150px;
+        height: 60px;
+    }
+
+    .div-right {
+        padding: 15px;
+        gap: 5px;
+    }
+
+        .div-right .div-navbar {
+            height: 40px;
+            justify-content: center; /* Center buttons */
+            gap: 20px;
+        }
+
+            .div-right .div-navbar .button {
+                font-size: 16px;
             }
 
-    .footer p {
-        margin: 0;
+    .profile-icon {
+        width: 35px;
+        height: 35px;
     }
+}
+
+/* Mobile view - Even smaller layout adjustments */
+@media screen and (max-width: 480px) {
+    .div-left {
+        width: 100%;
+        padding: 5px;
+    }
+
+    .company-logo .logo {
+        width: 100px;
+        height: 50px;
+    }
+
+    .div-right {
+        padding: 10px;
+        gap: 5px;
+    }
+
+        .div-right .div-navbar {
+            height: 40px;
+            justify-content: center;
+            gap: 10px;
+        }
+
+            .div-right .div-navbar .button {
+                font-size: 14px;
+            }
+
+    .profile-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .footer {
+        height: auto; /* Make footer auto-adjust its height */
+        padding: 10px;
+    }
+
+    .row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .footer h3 {
+        font-size: 0.9em;
+    }
+
+    .footer ul li a {
+        font-size: 0.8em;
+    }
+}

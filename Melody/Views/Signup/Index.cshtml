@@ -1,0 +1,165 @@
+﻿@model IEnumerable<Melody.Models.Signup>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<style>
+    .container {
+        display: flex;
+        flex-direction: row;
+        gap: 25px;
+        height: auto;
+    }
+
+    .left-div {
+        width: 200px;
+        margin: 10px;
+        padding: 5px;
+        display: flex;
+    }
+
+        .left-div .image {
+            border-radius: 25px;
+        }
+
+            .left-div .image .company-logo {
+                object-fit: cover;
+                border-radius: 25px;
+                width: 170px;
+                height: 90px;
+            }
+
+ .right-div{
+     display:flex;
+     align-items:center;
+ }
+    .register-form {
+        display: flex;
+        flex-direction:column;
+        margin-left: 300px;
+        margin-top:40px;
+        margin-bottom:40px;
+        padding: 10px;
+        border-radius:25px;
+        background-color: #9e9b9a;
+        align-items:center;
+        width:500px;
+    }
+    .register-form h1{
+        text-align:center;
+        color:black;
+        margin-bottom:20px;
+    }
+    .form-group{
+        display:flex;
+        flex-direction:column;
+        margin-bottom:15px;
+        align-items:center;
+    }
+    .form-group input{
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 5px;
+        width: 100%;
+        background-color: black;
+        color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    .form-group .Firstname{
+        margin-bottom:15px;
+    }
+    .btn-submit{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 120px;
+        padding: 10px;
+        margin: 20px auto;
+        background-color: #555;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    .social-signup{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+    }
+    .register-form p{
+        color:black;
+    }
+
+    .btn-social {
+        width: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        color: white;
+        font-size: 16px;
+    }
+
+        .btn-social img {
+            margin-right: 10px;
+            height: 24px;
+        }
+
+    .google {
+        background-color: #db4437;
+    }
+
+    .facebook {
+        background-color: #3b5998;
+    }
+</style>
+<div class="container">
+    <div class="left-div">
+        <div class="image">
+            <img src="~/images/logo.png" class="company-logo" />
+        </div>
+    </div>
+    <div class="right-div">
+        <div class="register-form">
+            <h1>Signup</h1>
+            <form method="post">
+                <div class="form-group">
+                    <input type="text" name="Firstname" class="Firstname" placeholder="Firstname*" required />
+                    <input type="text" name="Lastname" class="Lastname" placeholder="Lastname*" required />
+                </div>
+                <div class="form-group">
+                    <input type="email" name="Email" placeholder="Email" required />
+                </div>
+                <div class="form-group">
+                    <input type="password" name="Password" placeholder="Password" required />
+                </div>
+                <div class="form-group">
+                    <input type="password" name="ConfirmPassword" placeholder="Confirm password" required />
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn-submit">Submit</button>
+                </div>
+            </form>
+            <p>Already have an account? <a href="/Account/Login">Log in</a></p>
+            <div class="social-signup">
+                <p>----------------- Or -----------------</p>
+                <button class="btn-social google">
+                    <img src="~/images/google-logo.png" alt="Google" /> Sign Up With Google
+                </button>
+                <button class="btn-social facebook">
+                    <img src="~/images/facebook-logo.png" alt="Facebook" /> Sign Up With Facebook
+                </button>
+            </div>
+
+            <div class="recaptcha-info">
+                <p>This site is protected by reCAPTCHA and the Google <a href="#">Privacy Policy</a> and <a href="#">Terms of Service</a> apply.</p>
+            </div>
+        </div>
+    </div>
+</div>

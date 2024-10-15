@@ -1,8 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Melody.Data;
+using Melody.Models;
+using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MelodyContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("mvcapplication") ?? throw new InvalidOperationException("Connection string 'MelodyContext' not found.")));
+
+//builder.Services.AddIdentity<ApplicationUser, IdentityRole>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -20,7 +24,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

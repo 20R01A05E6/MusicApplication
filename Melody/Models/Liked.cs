@@ -13,10 +13,11 @@ namespace Melody.Models
         [ForeignKey("Song")]
         public int SongId { get; set; }
 
+        [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
 
-        // Navigation Properties
-        public UserDetails UserDetails { get; set; }
+        // Relationships
+        public UserDetails User { get; set; }
         public Song Song { get; set; }
     }
 }

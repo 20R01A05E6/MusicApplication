@@ -1,17 +1,23 @@
-﻿using Microsoft.EntityFrameworkCore;
-
+﻿using Melody.Models;
+using Microsoft.EntityFrameworkCore;
 namespace Melody.Data
 {
     public class MelodyContext : DbContext
     {
-        public MelodyContext (DbContextOptions<MelodyContext> options)
-            : base(options)
-        {
-        }
-
-        public DbSet<Melody.Models.UserDetails> UserDetails { get; set; } = default!;
-        public DbSet<Melody.Models.Playlists> Playlists { get; set; } = default!;
-        public DbSet<Melody.Models.Song> Song { get; set; } = default!;
-        public DbSet<Melody.Models.Liked> Liked { get; set; } = default!;
+        public DbSet<UserDetails> UserDetails { get; set; }
+        public DbSet<Signup> Signups { get; set; }
+        public DbSet<Login> Logins { get; set; }
+        public DbSet<Liked> LikedSongs { get; set; }
+        public DbSet<Playlist> Playlists { get; set; }
+        public DbSet<PlaylistSong> PlaylistSongs { get; set; }
+        public DbSet<Song> Songs { get; set; }
+        public DbSet<Album> Albums { get; set; }
+        public DbSet<Artist> Artists { get; set; }
+        public DbSet<Podcast> Podcasts { get; set; }
+        public DbSet<Channel> Channels { get; set; }
+        public DbSet<PodcastEpisode> PodcastEpisodes { get; set; }
+        public DbSet<ChannelPodcast> ChannelPodcasts { get; set; }
+        public DbSet<Following> Following { get; set; }
+        public MelodyContext(DbContextOptions<MelodyContext> options) : base(options) { }
     }
 }

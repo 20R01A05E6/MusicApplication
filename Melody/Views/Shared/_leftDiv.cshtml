@@ -1,12 +1,136 @@
-﻿<div class="div-left">
+﻿<style>
+    /* Flex container for Your Library section */
+.l2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 10px; /* Add padding for better spacing */
+}
+
+.l2 h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.divider {
+    border: 1px solid white;
+    margin: 0;
+    width: 100%;
+}
+
+.playlist-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 25px;
+    background-color: black;
+    color: white;
+    padding: 15px; /* Added padding */
+    width: 100%; /* Take full width */
+    box-sizing: border-box; /* Ensure padding doesn't overflow */
+}
+
+/* Button style with border-radius */
+.playlist-container button {
+    background-color: #1db954; /* Spotify-like green */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px; /* Border-radius added */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Transition for hover effect */
+}
+
+.playlist-container button:hover {
+    background-color: #17a247; /* Slightly darker on hover */
+}
+
+/* Make the home section responsive */
+.home {
+    text-align: center;
+}
+
+.home-logo img {
+    width: 50px; /* Set a max width for responsive design */
+    height: auto;
+}
+
+/* Responsive Design */
+@@media screen and (max-width: 768px) {
+    .div-left {
+        width: 100%;
+        padding: 10px; /* Adjust padding */
+    }
+
+    .l2 {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .playlist-container {
+        width: 90%; /* Adjust width for smaller screens */
+        margin: 0 auto;
+    }
+
+    .company-logo img {
+        width: 50px; /* Make the logo responsive */
+        height: auto;
+    }
+
+    .home-logo img {
+        width: 40px; /* Smaller logo for mobile view */
+        height: auto;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    .playlist-container button {
+        padding: 8px 15px; /* Adjust padding for smaller buttons */
+    }
+}
+
+@@media screen and (max-width: 480px) {
+    .l2 h2 {
+        font-size: 1.2em; /* Smaller font size for mobile */
+    }
+    .playlist-container{
+        padding-top:0px;
+    }
+
+    .playlist-container button {
+        padding: 6px 12px; /* Further reduced padding for very small screens */
+    }
+}
+
+</style>
+<div class="div-left">
     <div class="l1">
         <div class="company-logo">
-            <img src="~/images/logo.png" alt="logo" class="logo" />
+            <a asp-controller="Home" asp-action="Index">
+                <img src="~/images/logo.png" alt="logo" class="logo" />
+            </a>
         </div>
-        <h3>HOME</h3>
+        <div class="home">
+            <div class="home-logo">
+                <a asp-controller="Home" asp-action="Index">
+                    <img src="~/images/homelogo.png" alt="logo" class="home-logo-image" />
+                </a>
+            </div>
+            <a asp-controller="Home" asp-action="Index">
+                <h2 style="margin-top:25px;margin-bottom:0px;color:white;text-decoration:none;">
+                    HOME</h2>
+            </a>
+        </div>
     </div>
     <div class="l2">
         <h2>Your library</h2>
-        <h4>Create your playlist</h4>
+        <hr class="divider">
+        <div class="playlist-container">
+            <h4 style="margin-top:0px;">Create your playlist</h4>
+            <button>Create Playlist</button>
+        </div>
     </div>
 </div>

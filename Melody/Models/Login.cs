@@ -10,15 +10,18 @@ namespace Melody.Models
         [ForeignKey("UserDetails")]
         public int UserId { get; set; }
 
-        [Required, StringLength(100)]
+        [Required]
+        [MaxLength(50)]
         public string Username { get; set; }
 
-        [Required, DataType(DataType.Password)]
+        [Required]
+        [MaxLength(100)]
         public string Password { get; set; }
 
+        [DataType(DataType.DateTime)]
         public DateTime LastLogin { get; set; }
 
-        // Navigation Property
-        public UserDetails UserDetails { get; set; }
+        // Relationships
+        public UserDetails User { get; set; }
     }
 }

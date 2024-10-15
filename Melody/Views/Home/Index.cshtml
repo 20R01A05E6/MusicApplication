@@ -1,23 +1,113 @@
-﻿@{
+﻿@model Melody.Models.HomeViewModel
+@{
     ViewData["Title"] = "Home";
 }
 <style>
     /* Content sections (Artists, Albums, Podcasts) */
     .container .div-right .Artists,
     .container .div-right .Albums,
-    .container .div-right .Podcasts {
+    .container .div-right .Charts {
+        display:flex;
+        flex-direction:column;
         background-color: #333;
         border-radius: 25px;
-        height: 150px;
+        height: 180px;
         width: 100%; /* Full width */
+        gap:10px;
     }
+
+        .container .div-right .Artists .Title-container,
+        .container .div-right .Albums .Title-container,
+        .container .div-right .Charts .Title-container {
+            display: flex;
+            flex-direction: row;
+            gap: 1050px;
+            height: 30px;
+        }
+
 
         .container .div-right .Artists h4,
         .container .div-right .Albums h4,
-        .container .div-right .Podcasts h4 {
+        .container .div-right .Charts h4 {
+            width: 100px;
             margin: 5px;
             margin-left: 12px;
             padding: 0;
+        }
+
+    .see-more-button {
+        background-color: #333;
+        border: none;
+        border-radius: 15px;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    .container .div-right .Artists .Artists-container,
+    .container .div-right .Albums .Albums-container,
+    .container .div-right .Charts .Charts-container {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+    }
+
+    .Artists-list,
+    .Albums-list{
+        width: 120px;
+        border-radius: 25px;
+        height: 120px;
+        background-color: black;
+        margin: 7px;
+    }
+
+    .image-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        height: 100px;
+    }
+
+    .image {
+        width: 100px;
+        height: 100px;
+        border-radius: 25px;
+        object-fit: cover;
+        border: 2px solid #5fd068;
+    }
+
+    .Artists-list .image-container .image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #5fd068;
+    }
+
+    .card {
+        width: 120px;
+        height: 120px;
+        margin:7px;
+        background: linear-gradient(135deg, #6a00f4, #38ef7d); /* Gradient background */
+        border-radius: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Adding shadow for depth */
+        color: white;
+        margin-left:10px;
+    }
+
+        .card h3 {
+            font-size: 24px;
+            text-align: center;
+            margin: 0;
         }
 </style>
 <div class="container">
@@ -25,14 +115,84 @@
     <div class="div-right">
         @await Html.PartialAsync("_rightDiv")
         <div class="Artists">
-            <h4>Artists</h4>
-
+            <div class="Title-container">
+                <div class="title"><h4>Artists</h4></div>
+                <div class="see-more">
+                    <form>
+                        <button asp-controller="Home" asp-action="Artists" type="submit" class="see-more-button">See more...</button>
+                    </form>
+                </div>
+            </div>
+            <div class="Artists-container">
+                @foreach (var artist in Model.Artists.Take(9))
+                {
+                    <div class="Artists-list">
+                        <a href="@Url.Action("Artist", "Artists", new { id = artist.ArtistId })">
+                            <div class="image-container">
+                                <img src="~/images/@artist.ImagePath" class="image" alt="@artist.Name" />
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
         </div>
         <div class="Albums">
-            <h4>Albums</h4>
+            <div class="Title-container">
+                <div class="title"><h4>Albums</h4></div>
+                <div class="see-more">
+                    <form asp-controller="Home" asp-action="Albums">
+                        <button type="submit" class="see-more-button">See more...</button>
+                    </form>
+                </div>
+            </div>
+            <div class="Albums-container">
+                @foreach (var album in Model.Albums.Take(9))
+                {
+                    <div class="Albums-list">
+                        <a href="@Url.Action("Album", "Albums", new { id = album.AlbumId })">
+                            <div class="image-container">
+                                <img src="~/images/@album.ImagePath" class="image" alt="@album.Title" />
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
         </div>
-        <div class="Podcasts">
-            <h4>Podcasts</h4>
+        <div class="Charts">
+            <div class="Title-container">
+                <div class="title"><h4>Charts</h4></div>
+                <div class="see-more">
+                    <form asp-controller="Home" asp-action="Charts">
+                        <button type="submit" class="see-more-button">See more...</button>
+                    </form>
+                </div>
+            </div>
+            <div class="Charts-container">
+                <div class="card">
+                    <h3>Top<br />Songs<br />Global</h3>
+                </div>
+                <div class="card">
+                    <h3>Top<br />Songs<br />India</h3>
+                </div>
+                <div class="card">
+                    <h3>Top 100<br />Songs<br />Global</h3>
+                </div>
+                <div class="card">
+                    <h3>Top 50<br />Songs<br />Global</h3>
+                </div>
+                <div class="card">
+                    <h3>Top Viral<br />Songs<br />Global</h3>
+                </div>
+                <div class="card">
+                    <h3>Top<br />Songs<br />Global</h3>
+                </div>
+                <div class="card">
+                    <h3>Top Viral<br />Songs<br />Global</h3>
+                </div>
+                <div class="card">
+                    <h3>Top<br />Songs<br />Global</h3>
+                </div>
+            </div>
         </div>
     </div>
 </div>
