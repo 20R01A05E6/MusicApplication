@@ -1,41 +1,29 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+
 namespace Melody.Models
 {
     public class Signup
     {
-        [Key]
-        public int SignupId { get; set; }
+        [Required(ErrorMessage = "Firstname is required")]
+        [MaxLength(30)]
+        public string Firstname { get; set; }
 
-        [ForeignKey("UserDetails")]
-        public int UserId { get; set; }
+        [Required(ErrorMessage = "Lastname is required")]
+        [MaxLength(30)]
+        public string Lastname { get; set; }
 
-        [Required]
-        [MaxLength(50)]
-        public string FirstName { get; set; }
-
-        [MaxLength(50)]
-        public string LastName { get; set; }
-
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
 
         [Required]
-        [MaxLength(100)]
-        [DataType(DataType.Password)] // Ensures it is treated as a password input in forms
+        [MinLength(6, ErrorMessage = "Password is required")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        [Compare("Password", ErrorMessage = "Confirm password doesn't match the password.")]
+        [Required(ErrorMessage = "Confirm password is required")]
+        [Compare("Password", ErrorMessage = "Password and Confirm Password do not match")]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
-
-        [DataType(DataType.DateTime)]
-        public DateTime CreatedAt { get; set; }
-
-        // Relationships
-        public UserDetails User { get; set; }
     }
 }

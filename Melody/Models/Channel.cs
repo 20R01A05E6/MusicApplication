@@ -13,6 +13,8 @@ namespace Melody.Models
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
 
+        public string? ImagePath { get; set; }
+
         // Relationships
         public ICollection<ChannelPodcast> ChannelPodcasts { get; set; }
     }

@@ -1,7 +1,6 @@
-﻿@model IEnumerable<Melody.Models.Signup>
-
+﻿@model Melody.Models.Signup
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Signup";
 }
 <style>
     .container {
@@ -28,7 +27,9 @@
                 width: 170px;
                 height: 90px;
             }
-
+            .text-danger{
+                color:red;
+            }
  .right-div{
      display:flex;
      align-items:center;
@@ -50,11 +51,28 @@
         color:black;
         margin-bottom:20px;
     }
+    .form-group1{
+        display:flex;
+        flex-direction:row;
+        align-items:center;
+        margin-bottom:15px;
+        gap:5px;
+    }
     .form-group{
         display:flex;
         flex-direction:column;
         margin-bottom:15px;
-        align-items:center;
+        align-items:flex-start;
+        width : 95%;
+    }
+    .form-group1 input{
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 5px;
+        width: 100%;
+        background-color: black;
+        color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
     .form-group input{
         padding: 10px;
@@ -65,9 +83,7 @@
         color: white;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
-    .form-group .Firstname{
-        margin-bottom:15px;
-    }
+    
     .btn-submit{
         display: flex;
         justify-content: center;
@@ -129,24 +145,25 @@
         <div class="register-form">
             <h1>Signup</h1>
             <form method="post">
-                <div class="form-group">
-                    <input type="text" name="Firstname" class="Firstname" placeholder="Firstname*" required />
+                <div class="form-group1">
+                    <input type="text" name="Firstname" class="Firstname" placeholder="Firstname*" required/>
                     <input type="text" name="Lastname" class="Lastname" placeholder="Lastname*" required />
                 </div>
                 <div class="form-group">
-                    <input type="email" name="Email" placeholder="Email" required />
+                    <input type="email" name="Email" placeholder="Email*" required />
+                    <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <input type="password" name="Password" placeholder="Password" required />
+                    <input type="password" name="Password" placeholder="Password*" required />
                 </div>
                 <div class="form-group">
-                    <input type="password" name="ConfirmPassword" placeholder="Confirm password" required />
+                    <input type="password" name="ConfirmPassword" placeholder="Confirm password*" required />
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn-submit">Submit</button>
                 </div>
             </form>
-            <p>Already have an account? <a href="/Account/Login">Log in</a></p>
+            <p>Already have an account? <a href="/Signup/Login">Login</a></p>
             <div class="social-signup">
                 <p>----------------- Or -----------------</p>
                 <button class="btn-social google">
@@ -163,3 +180,7 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.2/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.6/jquery.validate.unobtrusive.min.js"></script>
+}

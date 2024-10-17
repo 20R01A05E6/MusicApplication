@@ -1,8 +1,8 @@
 using Melody.Data;
 using Melody.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-
+using Microsoft.EntityFrameworkCore;
 namespace Melody.Controllers
 {
     public class HomeController : Controller
@@ -16,10 +16,12 @@ namespace Melody.Controllers
             _logger = logger;
         }
 
+        //[NonAction]
+        //[Authorize]
         public IActionResult Index()
         {
-            var artists = _context.Artists.ToList(); // Retrieve artists from the database
-            var albums = _context.Albums.ToList();   // Retrieve albums from the database
+            var artists = _context.Artists.ToList();
+            var albums = _context.Albums.ToList();
 
             var viewModel = new HomeViewModel
             {
@@ -41,15 +43,43 @@ namespace Melody.Controllers
             return RedirectToAction("Index", "Albums");
         }
 
-        public IActionResult Account()
+        public IActionResult Profile()
         {
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public async Task<IActionResult> Search(string text)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (string.IsNullOrEmpty(text))
+            {
+                return View(new List<SearchResultViewModel>());
+            }
+
+            // Searching in the Albums, Artists, and Songs tables
+            var albums = await _context.Albums
+                                       .Where(a => a.Title.Contains(text))
+                                       .ToListAsync();
+            var artists = await _context.Artists
+                                        .Where(a => a.Name.Contains(text))
+                                        .ToListAsync();
+            var songs = await _context.Songs
+                                      .Where(s => s.Name.Contains(text))
+                                      .ToListAsync();
+
+            // Combine the results into a ViewModel
+            var searchResults = new SearchResultViewModel
+            {
+                Albums = albums,
+                Artists = artists,
+                Songs = songs
+            };
+
+            return View(searchResults);
+        }
+
+    public IActionResult Logout()
+        {
+            return RedirectToAction("Login", "Signup");
         }
     }
 }

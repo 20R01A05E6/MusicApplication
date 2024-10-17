@@ -14,10 +14,9 @@ namespace Melody.Models
         [MaxLength(100)]
         public string Host { get; set; }
 
-        public int EpisodesCount { get; set; }
+        
 
-        [DataType(DataType.DateTime)]
-        public DateTime CreatedAt { get; set; }
+        public string? ImagePath { get; set; }
 
         // Relationships
         public ICollection<PodcastEpisode> PodcastEpisodes { get; set; }

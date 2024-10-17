@@ -3,17 +3,17 @@
     ViewData["Title"] = "Home";
 }
 <style>
-    /* Content sections (Artists, Albums, Podcasts) */
     .container .div-right .Artists,
     .container .div-right .Albums,
-    .container .div-right .Charts {
+    .container .div-right .Podcasts {
         display:flex;
         flex-direction:column;
         background-color: #333;
         border-radius: 25px;
-        height: 180px;
-        width: 100%; /* Full width */
+        height: auto;
+        width: auto; 
         gap:10px;
+        padding-bottom:20px;
     }
 
         .container .div-right .Artists .Title-container,
@@ -21,7 +21,7 @@
         .container .div-right .Charts .Title-container {
             display: flex;
             flex-direction: row;
-            gap: 1050px;
+            justify-content:space-between;
             height: 30px;
         }
 
@@ -29,7 +29,7 @@
         .container .div-right .Artists h4,
         .container .div-right .Albums h4,
         .container .div-right .Charts h4 {
-            width: 100px;
+            width: auto;
             margin: 5px;
             margin-left: 12px;
             padding: 0;
@@ -158,11 +158,11 @@
                 }
             </div>
         </div>
-        <div class="Charts">
+        <div class="Podcasts">
             <div class="Title-container">
-                <div class="title"><h4>Charts</h4></div>
+                <div class="title"><h4>Podcasts</h4></div>
                 <div class="see-more">
-                    <form asp-controller="Home" asp-action="Charts">
+                    <form asp-controller="Home" asp-action="Artists">
                         <button type="submit" class="see-more-button">See more...</button>
                     </form>
                 </div>

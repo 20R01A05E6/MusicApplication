@@ -4,6 +4,7 @@ using Melody.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Melody.Migrations
 {
     [DbContext(typeof(MelodyContext))]
-    partial class MelodyContextModelSnapshot : ModelSnapshot
+    [Migration("20241016064702_updatedmodel")]
+    partial class updatedmodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,9 +98,6 @@ namespace Melody.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -181,6 +181,32 @@ namespace Melody.Migrations
                     b.ToTable("LikedSongs");
                 });
 
+            modelBuilder.Entity("Melody.Models.Login", b =>
+                {
+                    b.Property<int>("LoginId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LoginId"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LoginId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Logins");
+                });
+
             modelBuilder.Entity("Melody.Models.Playlist", b =>
                 {
                     b.Property<int>("PlaylistId")
@@ -238,13 +264,16 @@ namespace Melody.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PodcastId"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EpisodesCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("Host")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -285,6 +314,45 @@ namespace Melody.Migrations
                     b.HasIndex("PodcastId");
 
                     b.ToTable("PodcastEpisodes");
+                });
+
+            modelBuilder.Entity("Melody.Models.Signup", b =>
+                {
+                    b.Property<int>("SignupId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SignupId"));
+
+                    b.Property<string>("ConfirmPassword")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Firstname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Lastname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SignupId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Signups");
                 });
 
             modelBuilder.Entity("Melody.Models.Song", b =>
@@ -349,17 +417,23 @@ namespace Melody.Migrations
 
                     b.Property<string>("Firstname")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Lastname")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Mobile")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("UserId");
 
@@ -434,6 +508,17 @@ namespace Melody.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Melody.Models.Login", b =>
+                {
+                    b.HasOne("Melody.Models.UserDetails", "User")
+                        .WithMany("Logins")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Melody.Models.Playlist", b =>
                 {
                     b.HasOne("Melody.Models.UserDetails", "User")
@@ -473,6 +558,17 @@ namespace Melody.Migrations
                         .IsRequired();
 
                     b.Navigation("Podcast");
+                });
+
+            modelBuilder.Entity("Melody.Models.Signup", b =>
+                {
+                    b.HasOne("Melody.Models.UserDetails", "User")
+                        .WithOne("Signup")
+                        .HasForeignKey("Melody.Models.Signup", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Melody.Models.Song", b =>
@@ -538,7 +634,12 @@ namespace Melody.Migrations
 
                     b.Navigation("LikedSongs");
 
+                    b.Navigation("Logins");
+
                     b.Navigation("Playlists");
+
+                    b.Navigation("Signup")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

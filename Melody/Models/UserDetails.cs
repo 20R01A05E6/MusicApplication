@@ -6,37 +6,27 @@ namespace Melody.Models
         [Key]
         public int UserId { get; set; }
 
-        [Required]
-        [MaxLength(50)]
-        public string Username { get; set; }
-
-        [Required]
-        [MaxLength(50)]
+        [Required(ErrorMessage = "Firstname is required")]
+        [MaxLength(30)]
         public string Firstname { get; set; }
 
-        [Required]
-        [MaxLength(50)]
+        [Required(ErrorMessage = "Lastname is required")]
+        [MaxLength (30)]
         public string Lastname { get; set; }
 
-        [MaxLength(15)]
-        public string Mobile { get; set; }
-
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
 
         [Required]
-        [MaxLength(100)]
+        [MinLength(6, ErrorMessage = "Password is required")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [DataType(DataType.DateTime)]
-        public DateTime CreatedAt { get; set; }
 
         // Relationships
-        public Signup Signup { get; set; }
         public ICollection<Liked> LikedSongs { get; set; }
         public ICollection<Playlist> Playlists { get; set; }
         public ICollection<Following> Followings { get; set; }
-        public ICollection<Login> Logins { get; set; }
     }
 }

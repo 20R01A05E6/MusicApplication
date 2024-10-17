@@ -1,16 +1,11 @@
-﻿@model IEnumerable<Melody.Models.Album>
-
-@{
-    ViewData["Title"] = "Index";
-}
-<style>
+﻿<style>
     .container .div-right .Albums {
         display: flex;
         flex-wrap: wrap;
         background-color: #333;
         border-radius: 25px;
         height: auto;
-        width: 100%; /* Full width */
+        width: auto; /* Full width */
         gap: 7px;
     }
 
@@ -24,9 +19,11 @@
 
     .Album-container {
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         padding: 10px;
+        position: relative; /* Ensures hover title is positioned correctly */
     }
 
     .Album-image {
@@ -37,6 +34,23 @@
         border: 2px solid #5fd068;
     }
 
+    /* Hidden title that appears on hover */
+    .Album-title {
+        position: absolute;
+        bottom: -30px; /* Position below the album */
+        text-align: center;
+        font-size: 14px;
+        color: #fff;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none; /* Prevent interaction with the title */
+    }
+
+    /* Show title on hover */
+    .Album-container:hover .Album-title {
+        opacity: 1;
+    }
+
     .div-right h3 {
         width: 100px;
         margin: 5px;
@@ -44,6 +58,7 @@
         padding: 0;
     }
 </style>
+
 <div class="container">
     @await Html.PartialAsync("_leftDiv")
     <div class="div-right">
@@ -57,6 +72,7 @@
                         <a href="@Url.Action("Album", "Albums", new { id = album.AlbumId })">
                             <img src="~/images/@album.ImagePath" class="Album-image" alt="@album.Title" />
                         </a>
+                        <div class="Album-title">@album.Title</div>
                     </div>
                 </div>
             }

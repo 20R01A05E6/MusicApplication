@@ -1,9 +1,4 @@
 ﻿@model Melody.Models.Artist
-@* @using Microsoft.AspNetCore.Identity
-@inject UserManager<ApplicationUser> UserManager
-@{
-    var userId = UserManager.GetUserId(User); // Retrieve the currently logged-in user's ID
-} *@
 @{
     ViewData["Title"] = "Artist";
     var songNumber = 1; // Initialize a counter for the serial number
@@ -509,7 +504,7 @@
                                     </svg>
                                 </label>
                             </div>
-                            <span class="duration" id="duration-@song.SongId">00:00</span> <!-- Duration -->
+                            <span class="duration" id="duration-@song.SongId">@song.Duration</span> <!-- Duration -->
                             <div class="ellipsis-menu" onclick="toggleMenu(@song.SongId)">
                                 <div class="menu-options hidden" id="menu-options-@song.SongId">
                                     <ul>
@@ -611,20 +606,6 @@
         });
     }
 
-    function toggleFollow() {
-        const followBtn = document.getElementById('follow-btn');
-        const followText = document.getElementById('follow-text');
-
-        if (followText.innerText === 'Follow') {
-            followText.innerText = 'Following';
-            followBtn.classList.add('following');
-        } else {
-            followText.innerText = 'Follow';
-            followBtn.classList.remove('following');
-        }
-    }
-
-
     function playNextSong() {
         if (currentIndex >= 0 && currentIndex < songElements.length) {
             const currentAudio = songElements[currentIndex];
@@ -637,7 +618,6 @@
             pauseIcon.style.display = 'none'; // Hide pause icon
 
             currentAudio.onended = function () {
-                // Move to the next song
                 playIcon.style.display = 'none'; // Hide play icon
                 pauseIcon.style.display = 'block'; // Show pause icon
                 currentIndex++; // Increment index
@@ -650,8 +630,20 @@
             };
         }
     }
-
     document.getElementById('play-all-toggle').addEventListener('change', togglePlayAll);
+    
+    function toggleFollow() {
+        const followBtn = document.getElementById('follow-btn');
+        const followText = document.getElementById('follow-text');
+
+        if (followText.innerText === 'Follow') {
+            followText.innerText = 'Following';
+            followBtn.classList.add('following');
+        } else {
+            followText.innerText = 'Follow';
+            followBtn.classList.remove('following');
+        }
+    }
 </script>
 
 

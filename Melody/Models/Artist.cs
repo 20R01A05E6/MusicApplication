@@ -15,6 +15,7 @@ namespace Melody.Models
 
         [MaxLength(50)]
         public string Country { get; set; }
+
         [MaxLength(50)]
         public string ImagePath { get; set; }
 

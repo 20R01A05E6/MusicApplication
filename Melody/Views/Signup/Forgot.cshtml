@@ -1,0 +1,117 @@
+﻿@model Melody.Models.Login
+@{
+    ViewData["Title"] = "Forgot";
+}
+<style>
+       .container {
+           display: flex;
+           flex-direction: row;
+           gap: 25px;
+           height: auto;
+       }
+
+       .left-div {
+           width: 200px;
+           margin: 10px;
+           padding: 5px;
+           display: flex;
+       }
+
+           .left-div .image {
+               border-radius: 25px;
+           }
+
+               .left-div .image .company-logo {
+                   object-fit: cover;
+                   border-radius: 25px;
+                   width: 170px;
+                   height: 90px;
+               }
+
+    .right-div{
+        display:flex;
+        align-items:center;
+    }
+       .register-form {
+           display: flex;
+           flex-direction:column;
+           margin-left: 300px;
+           margin-top:40px;
+           margin-bottom:40px;
+           padding: 10px;
+           border-radius:25px;
+           background-color: #9e9b9a;
+           align-items:center;
+           width:500px;
+       }
+       .register-form h1{
+           text-align:center;
+           color:black;
+           margin-bottom:20px;
+       }
+       .register-form h3{
+           color:black;
+       }
+       form{
+           width:80%;
+       }
+       .form-group{
+           display:flex;
+           flex-direction:column;
+           margin-bottom:15px;
+           align-items:flex-start;
+           width : 95%;
+       }
+       .form-group input{
+           padding: 10px;
+           margin: 5px 0;
+           border-radius: 5px;
+           width: 100%;
+           background-color: black;
+           color: white;
+           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+       }
+
+       .btn-submit{
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           width: 120px;
+           padding: 10px;
+           margin: 20px auto;
+           background-color: #555;
+           color: white;
+           border-radius: 5px;
+           cursor: pointer;
+           border: none;
+           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+       }
+       .text-danger{
+           color:red;
+       }
+</style>
+<div class="container">
+    <div class="left-div">
+        <div class="image">
+            <img src="~/images/logo.png" class="company-logo" />
+        </div>
+    </div>
+    <div class="right-div">
+        <div class="register-form">
+            <h1>Reset your password</h1>
+            <form method="post">
+                <h3>Enter your email address and we'll send you a link to get back into your account.</h3>
+                <div class="form-group">
+                    <input type="email" name="Email" placeholder="Email*" required />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <a href="/Signup/Forgot"><p>Need Support?</p></a>
+                <div class="form-group">
+                    <button type="submit" class="btn-submit">Send Link</button>
+                </div>
+            </form>
+            <a href="/Signup/Login"><p>Back to Login</p></a>
+        </div>
+    </div>
+</div>
+

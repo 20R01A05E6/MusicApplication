@@ -4,27 +4,32 @@
 }
 <style>
     .container .div-right .Artist {
-        display:flex;
-        flex-wrap:wrap;
+        display: flex;
+        flex-wrap: wrap;
         background-color: #333;
         border-radius: 25px;
         height: auto;
         width: 100%; /* Full width */
-        gap:7px;
+        gap: 7px;
     }
-    .Artist-list{
+
+    .Artist-list {
         width: 120px;
         border-radius: 25px;
         height: auto;
         background-color: black;
         margin: 7px;
     }
-    .Artist-container{
+
+    .Artist-container {
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding:10px;
+        padding: 10px;
+        position: relative; /* Needed for hover title positioning */
     }
+
     .Artist-image {
         width: 100px;
         height: 100px;
@@ -32,13 +37,31 @@
         object-fit: cover; /* Ensure the image fits the circle properly */
         border: 2px solid #5fd068;
     }
-    .div-right h3{
+
+    /* Hidden artist name that appears on hover */
+    .Artist-name {
+        position: absolute;
+        bottom: -20px; /* Position below the artist image */
+        text-align: center;
+        font-size: 14px;
+        color: #fff;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none; /* Prevent interaction with the name */
+    }
+
+    .Artist-container:hover .Artist-name {
+        opacity: 1;
+    }
+
+    .div-right h3 {
         width: 100px;
         margin: 5px;
         margin-left: 15px;
         padding: 0;
     }
 </style>
+
 <div class="container">
     @await Html.PartialAsync("_leftDiv")
     <div class="div-right">
@@ -52,6 +75,7 @@
                         <a href="@Url.Action("Artist", "Artists", new { id = artist.ArtistId })">
                             <img src="~/images/@artist.ImagePath" class="Artist-image" alt="@artist.Name" />
                         </a>
+                        <div class="Artist-name">@artist.Name</div>
                     </div>
                 </div>
             }

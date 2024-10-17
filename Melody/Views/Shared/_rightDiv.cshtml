@@ -41,14 +41,65 @@
             .dropdown a .external-icon {
                 margin-left: 5px;
             }
+
+    .anchor {
+        text-decoration: none;
+        color: white;
+    }
+
+    /*Search*/
+    .input {
+        height: 30px;
+        border: 1.7px solid white;
+        border-color: white;
+        margin-top: 7px;
+        max-width: 190px;
+        background-color: #333;
+        border-radius: 10px;
+        outline: none;
+        color: white;
+    }
+
+        .input:focus {
+            animation: rotateShadow 2s infinite linear;
+        }
+
+    @@keyframes rotateShadow {
+        0% {
+            box-shadow: -2px -2px 8px 1px #aa00ff, 2px 2px 8px 1px #3700ff;
+        }
+
+        25% {
+            box-shadow: -2px 2px 8px 1px #aa00ff, 2px -2px 8px 1px #3700ff;
+        }
+
+        50% {
+            box-shadow: 2px 2px 8px 1px #aa00ff, -2px -2px 8px 1px #3700ff;
+        }
+
+        75% {
+            box-shadow: 2px -2px 8px 1px #aa00ff, -2px 2px 8px 1px #3700ff;
+        }
+
+        100% {
+            box-shadow: -2px -2px 8px 1px #aa00ff, 2px 2px 8px 1px #3700ff;
+        }
+    }
+
 </style>
 
 <div class="div-navbar">
+    <!--Search icon-->
+    <form asp-action="Search" method="get" class="search-form">
+        <input placeholder="Search" class="input" name="text" type="text" />
+        <button type="submit" style="display:none;">Search</button> <!-- Optional if using Enter key -->
+    </form>
+
+
     <!-- Navigation buttons -->
-    <button class="button active">Podcasts</button>
-    <button class="button"><span>Channels</span></button>
-    <button class="button"><span>Contact</span></button>
-    <button class="button"><span>About</span></button>
+    <button class="button active"><a class="anchor" href="/Podcast/Index">Podcasts</a></button>
+    <button class="button"><a class="anchor" href="/Channel/Index">Channels</a></button>
+    <button class="button">Library </button>
     <button class="button">
         <!-- Notification Bell -->
         <svg viewBox="0 0 448 512" class="bell" style="width: 20px; height: 20px; fill: white;"><path d="M224 0c-17.7 0-32 14.3-32 32V49.9C119.5 61.4 64 124.2 64 200v33.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416H424c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4V200c0-75.8-55.5-138.6-128-150.1V32c0-17.7-14.3-32-32-32zm0 96h8c57.4 0 104 46.6 104 104v33.4c0 47.9 13.9 94.6 39.7 134.6H72.3C98.1 328 112 281.3 112 233.4V200c0-57.4 46.6-104 104-104h8zm64 352H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z"></path></svg>
@@ -58,13 +109,13 @@
     <div class="profile-icon-container">
         <img src="~/images/user_logo.jpg" alt="Profile" class="profile-icon" onclick="toggleDropdown()">
         <div id="dropdownMenu" class="dropdown">
-            <a href="@Url.Action("Account", "Home")">Account</a>
-            <a href="#">Profile</a>
-            <a href="#">Upgrade to Premium <span class="external-icon">🔗</span></a>
+            <a href="@Url.Action("Profile", "Home")">Profile</a>
+            <a href="@Url.Action("Subscription","Signup")">Upgrade to Premium <span class="external-icon">🔗</span></a>
             <a href="#">Settings</a>
-            <a href="#">Log out</a>
+            <a asp-action="Logout" class="btn btn-danger">Logout</a>
         </div>
     </div>
+
 </div>
 
 <!-- JavaScript for toggling the dropdown -->

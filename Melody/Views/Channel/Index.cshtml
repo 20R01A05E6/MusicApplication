@@ -1,0 +1,22 @@
+﻿@model IEnumerable<Melody.Models.Channel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<style>
+    .Channel {
+        width: auto;
+        height: auto;
+        background-color: #333;
+        border-radius:25px;
+    }
+</style>
+<div class="container">
+    @await Html.PartialAsync("_leftDiv")
+    <div class="div-right">
+        @await Html.PartialAsync("_rightDiv")
+        <div class="Channel">
+            <h1>Channel</h1>
+        </div>
+    </div>
+</div>

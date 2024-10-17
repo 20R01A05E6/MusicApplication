@@ -5,8 +5,6 @@ namespace Melody.Data
     public class MelodyContext : DbContext
     {
         public DbSet<UserDetails> UserDetails { get; set; }
-        public DbSet<Signup> Signups { get; set; }
-        public DbSet<Login> Logins { get; set; }
         public DbSet<Liked> LikedSongs { get; set; }
         public DbSet<Playlist> Playlists { get; set; }
         public DbSet<PlaylistSong> PlaylistSongs { get; set; }
