@@ -30,7 +30,7 @@ body {
     .container .div-left {
         background-color: black;
         color: white;
-        width: 225px; /* Fixed width for the left div */
+        width: auto; /* Fixed width for the left div */
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -88,16 +88,14 @@ body {
     padding-right: 7px;
     padding-down: 7px;
     border-radius: 25px;
+    height:auto;
 }
 
 .container .div-left .l2 {
     background-color: #333;
     padding: 7px;
     border-radius: 25px;
-}
-
-.container .div-left .l1 {
-    height: 225px;
+    height:auto;
 }
 
 /* Right div styling */
@@ -224,11 +222,11 @@ body {
     color: white;
     text-align: center;
     padding: 0;
-    width: 100%;
+    width: auto;
     flex-shrink: 1;
     display: flex;
     flex-direction: column;
-    height: 400px;
+    height: auto;
 }
 
 .row {

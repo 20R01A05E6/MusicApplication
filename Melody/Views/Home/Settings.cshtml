@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Settings";
+}
+<style>
+    .Settings {
+        background-color: #333;
+        border-radius: 25px;
+        width: auto;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .language {
+        display: flex;
+        justify-content:flex-start;
+    }
+
+    .language-select {
+        margin-left: 15px;
+        background-color: #555;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+</style>
+
+<div class="container">
+    @await Html.PartialAsync("_leftDiv")
+    <div class="div-right">
+        @await Html.PartialAsync("_rightDiv")
+        <div class="Settings">
+            <h1>Settings</h1>
+            <div class="language">
+                <h3>Choose language</h3>
+                <form method="get" asp-action="Settings">
+                    <select id="languageSelector" name="lang" class="language-select" onchange="this.form.submit()">
+                        <option value="en" selected>English</option>
+                        <option value="fr">Français (French)</option>
+                        <option value="es">Español (Spanish)</option>
+                        <option value="de">Deutsch (German)</option>
+                        <option value="hi">हिंदी (Hindi)</option>
+                        <option value="te">తెలుగు (Telugu)</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

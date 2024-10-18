@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Melody.Data;
 using Melody.Models;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace Melody.Controllers
 {
@@ -83,7 +82,7 @@ namespace Melody.Controllers
                 ModelState.AddModelError("Password", "Password did not match.");
                 return View();
             }
-
+            HttpContext.Session.SetInt32("UserId", user.UserId);
             return RedirectToAction("Subscription", "Signup");
         }
 

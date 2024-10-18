@@ -505,17 +505,6 @@
                                 </label>
                             </div>
                             <span class="duration" id="duration-@song.SongId">@song.Duration</span> <!-- Duration -->
-                            <div class="ellipsis-menu" onclick="toggleMenu(@song.SongId)">
-                                <div class="menu-options hidden" id="menu-options-@song.SongId">
-                                    <ul>
-                                        <li>Add to Playlist</li>
-                                        <div class="divider"></div>
-                                        <li>Share</li>
-                                        <div class="divider"></div>
-                                        <li>Download</li>
-                                    </ul>
-                                </div>
-                            </div>
                         </div>
                         <!-- Hidden audio element to play the song -->
                         <audio id="audio-@song.SongId" src="~/songs/@song.FilePath"></audio>
@@ -612,26 +601,33 @@
             const playIcon = document.getElementById(`play-icon-${currentIndex + 1}`);
             const pauseIcon = document.getElementById(`pause-icon-${currentIndex + 1}`);
 
-            // Play the current song
-            currentAudio.play();
-            playIcon.style.display = 'block'; // Show play icon
-            pauseIcon.style.display = 'none'; // Hide pause icon
+            // Check if playIcon and pauseIcon exist to avoid null errors
+            if (playIcon && pauseIcon) {
+                // Play the current song
+                currentAudio.play();
+                playIcon.style.display = 'block'; // Show play icon
+                pauseIcon.style.display = 'none'; // Hide pause icon
 
-            currentAudio.onended = function () {
-                playIcon.style.display = 'none'; // Hide play icon
-                pauseIcon.style.display = 'block'; // Show pause icon
-                currentIndex++; // Increment index
-                if (currentIndex < songElements.length) {
-                    playNextSong(); // Play the next song
-                } else {
-                    document.getElementById('play-all-toggle').checked = false; // Uncheck play-all checkbox
-                    currentIndex = -1; // Reset index
-                }
-            };
+                currentAudio.onended = function () {
+                    playIcon.style.display = 'none'; // Hide play icon
+                    pauseIcon.style.display = 'block'; // Show pause icon
+                    currentIndex++; // Increment index
+                    if (currentIndex < songElements.length) {
+                        playNextSong(); // Play the next song
+                    } else {
+                        document.getElementById('play-all-toggle').checked = false; // Uncheck play-all checkbox
+                        currentIndex = -1; // Reset index
+                    }
+                };
+            } else {
+                console.error(`Element with id play-icon-${currentIndex + 1} or pause-icon-${currentIndex + 1} not found.`);
+            }
         }
     }
+
+    // Add event listener for Play All toggle
     document.getElementById('play-all-toggle').addEventListener('change', togglePlayAll);
-    
+
     function toggleFollow() {
         const followBtn = document.getElementById('follow-btn');
         const followText = document.getElementById('follow-text');
@@ -644,10 +640,5 @@
             followBtn.classList.remove('following');
         }
     }
+
 </script>
-
-
-<!-- Add CSRF token form helper -->
-<form asp-antiforgery="true">
-    <input type="hidden" name="__RequestVerificationToken" value="@Html.AntiForgeryToken()" />
-</form>

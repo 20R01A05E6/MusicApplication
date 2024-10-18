@@ -47,6 +47,25 @@ namespace Melody.Controllers
             return View(podcast);
         }
 
+        public async Task<IActionResult> Podcast(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var podcast = await _context.Podcasts
+                .FirstOrDefaultAsync(p => p.PodcastId == id);
+            if (podcast == null)
+            {
+                return NotFound();
+            }
+
+            return View(podcast);
+        }
+
+
+
         private bool PodcastExists(int id)
         {
             return _context.Podcasts.Any(e => e.PodcastId == id);

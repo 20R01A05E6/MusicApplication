@@ -1,135 +1,205 @@
 ﻿<style>
     /* Flex container for Your Library section */
-.l2 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    padding: 10px; /* Add padding for better spacing */
-}
-
-.l2 h2 {
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-.divider {
-    border: 1px solid white;
-    margin: 0;
-    width: 100%;
-}
-
-.playlist-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 25px;
-    background-color: black;
-    color: white;
-    padding: 15px; /* Added padding */
-    width: 100%; /* Take full width */
-    box-sizing: border-box; /* Ensure padding doesn't overflow */
-}
-
-/* Button style with border-radius */
-.playlist-container button {
-    background-color: #1db954; /* Spotify-like green */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 25px; /* Border-radius added */
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* Transition for hover effect */
-}
-
-.playlist-container button:hover {
-    background-color: #17a247; /* Slightly darker on hover */
-}
-
-/* Make the home section responsive */
-.home {
-    text-align: center;
-}
-
-.home-logo img {
-    width: 50px; /* Set a max width for responsive design */
-    height: auto;
-}
-
-/* Responsive Design */
-@@media screen and (max-width: 768px) {
-    .div-left {
-        width: 100%;
-        padding: 10px; /* Adjust padding */
+    .l2 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 10px; /* Add padding for better spacing */
     }
 
-    .l2 {
+    .l2 h2 {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .divider {
+        border: 1px solid white;
+        margin: 0;
         width: 100%;
-        padding: 10px;
     }
 
     .playlist-container {
-        width: 90%; /* Adjust width for smaller screens */
-        margin: 0 auto;
-    }
-
-    .company-logo img {
-        width: 50px; /* Make the logo responsive */
-        height: auto;
-    }
-
-    .home-logo img {
-        width: 40px; /* Smaller logo for mobile view */
-        height: auto;
-    }
-
-    h2 {
-        font-size: 1.5em;
-    }
-
-    .playlist-container button {
-        padding: 8px 15px; /* Adjust padding for smaller buttons */
-    }
-}
-
-@@media screen and (max-width: 480px) {
-    .l2 h2 {
-        font-size: 1.2em; /* Smaller font size for mobile */
-    }
-    .playlist-container{
-        padding-top:0px;
-    }
-
-    .playlist-container button {
-        padding: 6px 12px; /* Further reduced padding for very small screens */
-    }
-}
-.language{
-    width:auto;
-    height : auto;
-    display:flex;
-    gap:2px;
-    justify-content:center;
-    align-items:center;
-}
-.lan-button{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         border-radius: 25px;
         background-color: black;
         color: white;
-        display:flex;
-        flex-direction:row;
-}
-.lan-image{
-    margin:2px;
-    width:25px;
-    height:25px;
-}
-.lan-logo{
-    object-fit:cover;
-    border-radius:50%;
-    height:25px;
-}
+        padding: 15px; /* Added padding */
+        width: 100%; /* Take full width */
+        box-sizing: border-box; /* Ensure padding doesn't overflow */
+    }
 
+    /* Button style with border-radius */
+    .playlist-container button {
+        background-color: #1db954; /* Spotify-like green */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px; /* Border-radius added */
+        cursor: pointer;
+        transition: background-color 0.3s ease; /* Transition for hover effect */
+    }
+
+    .playlist-container button:hover {
+        background-color: #17a247; /* Slightly darker on hover */
+    }
+
+    /* Make the home section responsive */
+    .home {
+        text-align: center;
+    }
+
+    .home-logo img {
+        width: 50px; /* Set a max width for responsive design */
+        height: auto;
+    }
+
+    /* Responsive Design */
+    @@media screen and (max-width: 768px) {
+        .div-left {
+            width: 100%;
+            padding: 10px; /* Adjust padding */
+        }
+
+        .l2 {
+            width: 100%;
+            padding: 10px;
+        }
+
+        .playlist-container {
+            width: 90%; /* Adjust width for smaller screens */
+            margin: 0 auto;
+        }
+
+        .company-logo img {
+            width: 50px; /* Make the logo responsive */
+            height: auto;
+        }
+
+        .home-logo img {
+            width: 40px; /* Smaller logo for mobile view */
+            height: auto;
+        }
+
+        h2 {
+            font-size: 1.5em;
+        }
+
+        .playlist-container button {
+            padding: 8px 15px; /* Adjust padding for smaller buttons */
+        }
+    }
+
+    @@media screen and (max-width: 480px) {
+        .l2 h2 {
+            font-size: 1.2em; /* Smaller font size for mobile */
+        }
+
+        .playlist-container {
+            padding-top: 0px;
+        }
+
+        .playlist-container button {
+            padding: 6px 12px; /* Further reduced padding for very small screens */
+        }
+    }
+
+    .language {
+        width: auto;
+        height: auto;
+        display: flex;
+        gap: 2px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .lan-button {
+        border-radius: 25px;
+        background-color: black;
+        color: white;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .lan-image {
+        margin: 2px;
+        width: 25px;
+        height: 25px;
+    }
+
+    .lan-logo {
+        object-fit: cover;
+        border-radius: 50%;
+        height: 25px;
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8); /* Black with opacity */
+    }
+
+    .modal-content {
+        background-color: #333;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 30%;
+        text-align: center;
+    }
+
+    .modal-btn {
+        margin-top: 10px;
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+    }
+
+    .create-btn {
+        background-color: #1db954;
+        color: white;
+        border: none;
+    }
+
+    .create-btn:hover {
+        background-color: #17a247;
+    }
+
+    .cancel-btn {
+        background-color: #555;
+        color: white;
+        border: none;
+    }
+
+    .cancel-btn:hover {
+        background-color: #444;
+    }
+
+    .playlist-input {
+        width: 80%;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+        border: 1px solid #5fd068;
+        background-color: #222;
+        color: white;
+    }
+
+    .close {
+        color: white;
+        float: right;
+        font-size: 28px;
+        cursor: pointer;
+    }
 </style>
 <div class="div-left">
     <div class="l1">
@@ -144,8 +214,8 @@
                     <img src="~/images/homelogo.png" alt="logo" class="home-logo-image" />
                 </a>
             </div>
-            <a asp-controller="Home" asp-action="Index">
-                <h2 style="margin-top:25px;margin-bottom:0px;color:white;text-decoration:none;">
+            <a asp-controller="Home" asp-action="Index" style="text-decoration:none">
+                <h2 style="margin-top:25px;margin-bottom:0px;color:white;">
                     HOME</h2>
             </a>
         </div>
@@ -155,7 +225,7 @@
         <hr class="divider">
         <div class="playlist-container">
             <h4 style="margin-top:0px;">Create your playlist</h4>
-            <button>Create Playlist</button>
+            <button id="openCreateModal">Create Playlist</button>
         </div>
         <div class="language">
             <button class="lan-button">
@@ -167,3 +237,71 @@
         </div>
     </div>
 </div>
+<!-- Modal for Creating Playlist -->
+<div id="createPlaylistModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h1 style="color:white;">Create Playlist</h1>
+        <input type="text" id="playlistName" placeholder="Enter playlist name" class="playlist-input">
+        <button id="createPlaylistBtn" class="modal-btn create-btn">Create</button>
+        <button id="cancelPlaylistBtn" class="modal-btn cancel-btn">Cancel</button>
+    </div>
+</div>
+<script>
+    // Get modal and buttons
+    var modal = document.getElementById("createPlaylistModal");
+    var openModalBtn = document.getElementById("openCreateModal");
+    var closeModalBtn = document.querySelector(".close");
+    var cancelBtn = document.getElementById("cancelPlaylistBtn");
+    var createBtn = document.getElementById("createPlaylistBtn");
+
+    // Open the modal when "Create Playlist" is clicked
+    openModalBtn.onclick = function () {
+        modal.style.display = "block";
+    }
+
+    // Close modal when 'X' or "Cancel" is clicked
+    closeModalBtn.onclick = function () {
+        modal.style.display = "none";
+    }
+    cancelBtn.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // Close the modal when clicking outside of it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // Handle Create button click
+    createBtn.onclick = function () {
+        var playlistName = document.getElementById("playlistName").value;
+
+        if (playlistName) {
+            // Perform an AJAX request to create the playlist
+            fetch('/Playlist/Create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ Name: playlistName })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Playlist created successfully!");
+                        // Close the modal
+                        modal.style.display = "none";
+                        // Optionally, refresh or update the playlist section
+                        location.reload();
+                    } else {
+                        alert("Failed to create playlist");
+                    }
+                });
+        } else {
+            alert("Please enter a playlist name.");
+        }
+    }
+</script>

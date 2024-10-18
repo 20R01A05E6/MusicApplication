@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["Title"] = "Notification";
+}
+<style>
+    .Notifications {
+        background-color: #333;
+        width: auto;
+        height: auto;
+        border-radius: 25px;
+        padding: 15px;
+        gap: 55px;
+    }
+
+    .Whats-new {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+    }
+
+        .buttons button {
+            background-color: black;
+            color: white;
+            border-radius: 25px;
+            cursor:pointer;
+            height:35px;
+        }
+        .notification-text{
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+            justify-content:center;
+            align-items:center;
+            padding:40px;
+        }
+        .anchor{
+            text-decoration:none;
+            color:white;
+        }
+</style>
+<div class="container">
+    @await Html.PartialAsync("_leftDiv")
+    <div class="div-right">
+        @await Html.PartialAsync("_rightDiv")
+        <div class="Notifications">
+            <div class="Whats-new">
+                <h1>What's New</h1>
+                <h3>The latest releases from artists, podcasts, and shows you follow.</h3>
+                <div class="buttons">
+                    <button><a class="anchor" href="/Albums/Index">Music</a></button>
+                    <button><a class="anchor" href="/Podcast/Index">Podcasts</a></button>
+                </div>
+            </div>
+            <div class="notification-text">
+                <h1>We don't have any updates for you yet</h1>
+                <h3>When there's news, we'll post it here.
+                    Follow your favorite artists and podcasts to stay updated on them too.</h3>
+            </div>
+        </div>
+    </div>
+</div>
+

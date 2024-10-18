@@ -18,7 +18,7 @@
 
         .container .div-right .Artists .Title-container,
         .container .div-right .Albums .Title-container,
-        .container .div-right .Charts .Title-container {
+        .container .div-right .Podcasts .Title-container {
             display: flex;
             flex-direction: row;
             justify-content:space-between;
@@ -28,7 +28,7 @@
 
         .container .div-right .Artists h4,
         .container .div-right .Albums h4,
-        .container .div-right .Charts h4 {
+        .container .div-right .Podcasts h4 {
             width: auto;
             margin: 5px;
             margin-left: 12px;
@@ -51,19 +51,24 @@
 
     .container .div-right .Artists .Artists-container,
     .container .div-right .Albums .Albums-container,
-    .container .div-right .Charts .Charts-container {
+    .container .div-right .Charts .Podcasts-container {
         display: flex;
         flex-direction: row;
         gap: 5px;
     }
 
     .Artists-list,
-    .Albums-list{
+    .Albums-list,
+    .Podcasts-list{
         width: 120px;
         border-radius: 25px;
         height: 120px;
         background-color: black;
         margin: 7px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        position: relative; /* Needed for hover title positioning */
     }
 
     .image-container {
@@ -109,6 +114,25 @@
             text-align: center;
             margin: 0;
         }
+    /* Hidden artist name that appears on hover */
+    .Artist-name,
+    .Album-name,
+    .Podcast-name{
+        position: absolute;
+        bottom: -20px; /* Position below the artist image */
+        text-align: center;
+        font-size: 14px;
+        color: #fff;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none; /* Prevent interaction with the name */
+    }
+
+    .Artists-list:hover .Artist-name,
+    .Albums-list:hover .Album-name ,
+    .Podcasts-list:hover .Podcast-name {
+        opacity: 1;
+    }
 </style>
 <div class="container">
     @await Html.PartialAsync("_leftDiv")
@@ -119,7 +143,7 @@
                 <div class="title"><h4>Artists</h4></div>
                 <div class="see-more">
                     <form>
-                        <button asp-controller="Home" asp-action="Artists" type="submit" class="see-more-button">See more...</button>
+                        <button asp-controller="Artists" asp-action="Index" type="submit" class="see-more-button">See more...</button>
                     </form>
                 </div>
             </div>
@@ -132,6 +156,7 @@
                                 <img src="~/images/@artist.ImagePath" class="image" alt="@artist.Name" />
                             </div>
                         </a>
+                        <div class="Artist-name">@artist.Name</div>
                     </div>
                 }
             </div>
@@ -140,7 +165,7 @@
             <div class="Title-container">
                 <div class="title"><h4>Albums</h4></div>
                 <div class="see-more">
-                    <form asp-controller="Home" asp-action="Albums">
+                    <form asp-controller="Albums" asp-action="Index">
                         <button type="submit" class="see-more-button">See more...</button>
                     </form>
                 </div>
@@ -154,6 +179,7 @@
                                 <img src="~/images/@album.ImagePath" class="image" alt="@album.Title" />
                             </div>
                         </a>
+                        <div class="Album-name">@album.Title</div>
                     </div>
                 }
             </div>
@@ -162,36 +188,23 @@
             <div class="Title-container">
                 <div class="title"><h4>Podcasts</h4></div>
                 <div class="see-more">
-                    <form asp-controller="Home" asp-action="Artists">
+                    <form asp-controller="Podcast" asp-action="Index">
                         <button type="submit" class="see-more-button">See more...</button>
                     </form>
                 </div>
             </div>
-            <div class="Charts-container">
-                <div class="card">
-                    <h3>Top<br />Songs<br />Global</h3>
-                </div>
-                <div class="card">
-                    <h3>Top<br />Songs<br />India</h3>
-                </div>
-                <div class="card">
-                    <h3>Top 100<br />Songs<br />Global</h3>
-                </div>
-                <div class="card">
-                    <h3>Top 50<br />Songs<br />Global</h3>
-                </div>
-                <div class="card">
-                    <h3>Top Viral<br />Songs<br />Global</h3>
-                </div>
-                <div class="card">
-                    <h3>Top<br />Songs<br />Global</h3>
-                </div>
-                <div class="card">
-                    <h3>Top Viral<br />Songs<br />Global</h3>
-                </div>
-                <div class="card">
-                    <h3>Top<br />Songs<br />Global</h3>
-                </div>
+            <div class="Podcasts-container">
+                @foreach (var podcast in Model.Podcasts.Take(9))
+                {
+                    <div class="Podcasts-list">
+                        <a href="@Url.Action("Podcast", "Podcast", new { id = podcast.PodcastId })">
+                            <div class="image-container">
+                                <img src="~/images/@podcast.ImagePath" class="image" alt="@podcast.Name" />
+                            </div>
+                        </a>
+                        <div class="Podcast-name">@podcast.Name</div>
+                    </div>
+                }
             </div>
         </div>
     </div>

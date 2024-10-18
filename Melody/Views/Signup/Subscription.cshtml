@@ -85,6 +85,9 @@
         height: 500px;
         background-color: #828282;
         border-radius: 25px;
+        display:flex;
+        flex-direction:column;
+        justify-content:space-between;
     }
 
     .subscription-type {
@@ -107,12 +110,22 @@
 
     .anchor {
         text-decoration: none;
+        display:flex;
+        justify-content:center;
+        color:black;
     }
 
     .features {
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+    .features-list{
+        font-size:x-large;
+    }
+    .header a{
+        text-decoration:none;
+        color:white;
     }
 </style>
 <div class="container">
@@ -138,6 +151,7 @@
                     <li>One device access only</li>
                     <li>Ad-Free</li>
                     <li>Offline streaming</li>
+                    <li>No Jam Sessions</li>
                     <li>High quality streaming</li>
                     <li>Limited downloads upto 75 songs</li>
                 </ul>
@@ -227,6 +241,7 @@
                         <li>No Offline streaming</li>
                         <li>No Jam Sessions</li>
                         <li>Medium quality streaming</li>
+                        <li>Limited Features</li>
                     </ul>
                 </div>
             <div class="divider">

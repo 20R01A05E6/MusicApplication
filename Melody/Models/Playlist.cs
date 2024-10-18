@@ -14,9 +14,6 @@ namespace Melody.Models
         [ForeignKey("UserDetails")]
         public int UserId { get; set; }
 
-        [DataType(DataType.DateTime)]
-        public DateTime CreatedAt { get; set; }
-
         // Relationships
         public UserDetails User { get; set; }
         public ICollection<PlaylistSong> PlaylistSongs { get; set; }
