@@ -1,9 +1,9 @@
 using Melody.Data;
+using Melody.Filters;
 using Melody.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 namespace Melody.Controllers
 {
     public class HomeController : Controller
@@ -16,7 +16,7 @@ namespace Melody.Controllers
             _context = context;
             _logger = logger;
         }
-
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var artists = _context.Artists.ToList();
@@ -33,22 +33,26 @@ namespace Melody.Controllers
             return View(viewModel);
         }
 
-       public IActionResult Notification()
-        {
-            return View();
-        }
-
+        [SubscriptionAuthorize("Free")]
         public IActionResult Profile()
         {
             return View();
         }
 
-        //Settings
+        // Settings
+        [SubscriptionAuthorize("Free")]
         public IActionResult Settings(string lang = "en")
         {
             ViewData["SelectedLanguage"] = lang;
-
             return View();
+        }
+
+        // Ensure only subscribed users can view the artists page
+        [SubscriptionAuthorize]
+        public IActionResult Artists()
+        {
+            var artists = _context.Artists.ToList();
+            return View(artists);
         }
 
 
@@ -101,6 +105,8 @@ namespace Melody.Controllers
             ViewBag.ResultType = "None";  // No results found flag
             return View(new SearchResultViewModel());
         }
+        
+        
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();

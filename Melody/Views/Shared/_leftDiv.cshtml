@@ -8,10 +8,10 @@
         padding: 10px; /* Add padding for better spacing */
     }
 
-    .l2 h2 {
-        margin-top: 0;
-        margin-bottom: 0;
-    }
+        .l2 h2 {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
 
     .divider {
         border: 1px solid white;
@@ -31,20 +31,20 @@
         box-sizing: border-box; /* Ensure padding doesn't overflow */
     }
 
-    /* Button style with border-radius */
-    .playlist-container button {
-        background-color: #1db954; /* Spotify-like green */
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 25px; /* Border-radius added */
-        cursor: pointer;
-        transition: background-color 0.3s ease; /* Transition for hover effect */
-    }
+        /* Button style with border-radius */
+        .playlist-container button {
+            background-color: #1db954; /* Spotify-like green */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px; /* Border-radius added */
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Transition for hover effect */
+        }
 
-    .playlist-container button:hover {
-        background-color: #17a247; /* Slightly darker on hover */
-    }
+            .playlist-container button:hover {
+                background-color: #17a247; /* Slightly darker on hover */
+            }
 
     /* Make the home section responsive */
     .home {
@@ -101,9 +101,9 @@
             padding-top: 0px;
         }
 
-        .playlist-container button {
-            padding: 6px 12px; /* Further reduced padding for very small screens */
-        }
+            .playlist-container button {
+                padding: 6px 12px; /* Further reduced padding for very small screens */
+            }
     }
 
     .language {
@@ -170,9 +170,9 @@
         border: none;
     }
 
-    .create-btn:hover {
-        background-color: #17a247;
-    }
+        .create-btn:hover {
+            background-color: #17a247;
+        }
 
     .cancel-btn {
         background-color: #555;
@@ -180,9 +180,9 @@
         border: none;
     }
 
-    .cancel-btn:hover {
-        background-color: #444;
-    }
+        .cancel-btn:hover {
+            background-color: #444;
+        }
 
     .playlist-input {
         width: 80%;
@@ -201,6 +201,7 @@
         cursor: pointer;
     }
 </style>
+
 <div class="div-left">
     <div class="l1">
         <div class="company-logo">
@@ -216,7 +217,8 @@
             </div>
             <a asp-controller="Home" asp-action="Index" style="text-decoration:none">
                 <h2 style="margin-top:25px;margin-bottom:0px;color:white;">
-                    HOME</h2>
+                    HOME
+                </h2>
             </a>
         </div>
     </div>
@@ -237,6 +239,7 @@
         </div>
     </div>
 </div>
+
 <!-- Modal for Creating Playlist -->
 <div id="createPlaylistModal" class="modal">
     <div class="modal-content">
@@ -247,6 +250,7 @@
         <button id="cancelPlaylistBtn" class="modal-btn cancel-btn">Cancel</button>
     </div>
 </div>
+
 <script>
     // Get modal and buttons
     var modal = document.getElementById("createPlaylistModal");
@@ -277,31 +281,42 @@
 
     // Handle Create button click
     createBtn.onclick = function () {
-        var playlistName = document.getElementById("playlistName").value;
+        var playlistNameInput = document.getElementById("playlistName");
+        var playlistName = playlistNameInput.value.trim();
+
+        // Log the playlist name for debugging purposes
+        console.log("Playlist Name:", playlistName);
 
         if (playlistName) {
             // Perform an AJAX request to create the playlist
-            fetch('/Playlist/Create', {
+            fetch('/Playlists/Create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ Name: playlistName })
+                body: JSON.stringify({ playlistName: playlistName }) // Updated property name here
             })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert("Playlist created successfully!");
-                        // Close the modal
-                        modal.style.display = "none";
-                        // Optionally, refresh or update the playlist section
-                        location.reload();
+                        alert(data.message); // Display success message
+                        modal.style.display = "none"; // Close the modal
+                        location.reload(); // Refresh or update the playlist section
                     } else {
-                        alert("Failed to create playlist");
+                        // Handle the error message returned from the server
+                        alert(data.message || "Failed to create playlist. Errors: " + (data.errors ? data.errors.join(', ') : ''));
                     }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("An error occurred while creating the playlist.");
                 });
         } else {
+            // If no playlist name is entered, display an alert
             alert("Please enter a playlist name.");
+            playlistNameInput.focus(); // Bring focus back to the input field
         }
     }
+
 </script>
+

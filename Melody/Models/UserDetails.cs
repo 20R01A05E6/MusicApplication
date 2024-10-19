@@ -23,6 +23,7 @@ namespace Melody.Models
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
+        public string SubscriptionType { get; set; } = "Free";
 
         // Relationships
         public ICollection<Liked> LikedSongs { get; set; }

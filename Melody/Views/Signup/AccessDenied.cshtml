@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "AccessDenied";
+}
+<style>
+    .Access-Denied{
+        border-radius:25px;
+        background-color:#333;
+        padding:15px;
+        width:auto;
+        height:100vh;
+        display:flex;
+        justify-content:center;
+    }
+</style>
+<div class="container">
+    @await Html.PartialAsync("_leftDiv")
+    <div class="div-right">
+        @await Html.PartialAsync("_rightDiv")
+        <div class="Acees-Denied">
+            <h1>Access Denied</h1>
+        </div>
+    </div>
+</div>
+

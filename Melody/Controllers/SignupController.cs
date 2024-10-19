@@ -2,6 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Melody.Data;
 using Melody.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
+using Melody.Filters;
 
 namespace Melody.Controllers
 {
@@ -16,13 +21,15 @@ namespace Melody.Controllers
 
         // GET: Signup
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Signup()
         {
-            return View(); // Return the signup view
+            return View();
         }
 
         // POST: Signup
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Signup(Signup model)
         {
             if (ModelState.IsValid)
@@ -31,7 +38,7 @@ namespace Melody.Controllers
                 if (existingUser != null)
                 {
                     ModelState.AddModelError("Email", "A user with this email already exists.");
-                    return View(model); // Return the view with error messages
+                    return View(model);
                 }
 
                 var newUser = new UserDetails
@@ -39,22 +46,22 @@ namespace Melody.Controllers
                     Firstname = model.Firstname,
                     Lastname = model.Lastname,
                     Email = model.Email,
-                    Password = model.Password // Store plain text for now (hash in production)
+                    Password = model.Password, // Store plain text for now (hash in production)
+                    SubscriptionType = "Free" // Default subscription type
                 };
 
                 _context.UserDetails.Add(newUser);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Login", "Signup"); // Redirect to login on successful signup
+                return RedirectToAction("Login", "Signup");
             }
 
-            return View(model); // Return the view with validation errors
+            return View(model);
         }
-
-
 
         // GET: Login
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
@@ -62,6 +69,7 @@ namespace Melody.Controllers
 
         // POST: Login
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(string Email, string Password)
         {
             if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
@@ -77,26 +85,68 @@ namespace Melody.Controllers
                 return View();
             }
 
-            if (user.Password != Password) // Should hash the password for security in production
+            if (user.Password != Password)
             {
                 ModelState.AddModelError("Password", "Password did not match.");
                 return View();
             }
+
+            // Set session
             HttpContext.Session.SetInt32("UserId", user.UserId);
-            return RedirectToAction("Subscription", "Signup");
+            HttpContext.Session.SetString("SubscriptionType", user.SubscriptionType);
+
+            return RedirectToAction("Index", "Home");
         }
 
+
+        // Access Denied page
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        // Logout
+        public IActionResult Logout()
+        {
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Signup");
+        }
+
+        // Subscription
+        [Authorize]
         public IActionResult Subscription()
         {
             return View();
         }
 
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Subscription(string newSubscriptionType)
+        {
+            var userId = int.Parse(User.FindFirst("UserId")?.Value); // Get UserId from claims
+
+            var user = await _context.UserDetails.FindAsync(userId);
+
+            if (user != null)
+            {
+                user.SubscriptionType = newSubscriptionType;
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Subscription");
+        }
+
+
+
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Forgot()
         {
             return View();
         }
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Forgot(UserDetails model)
         {
             var user = await _context.UserDetails.FirstOrDefaultAsync(u => u.Email == model.Email);
@@ -107,5 +157,6 @@ namespace Melody.Controllers
             }
             return View();
         }
+
     }
 }

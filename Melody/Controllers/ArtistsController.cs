@@ -40,10 +40,5 @@ namespace Melody.Controllers
             return View(artist);
         }
 
-        
-        private bool ArtistExists(int id)
-        {
-            return _context.Artists.Any(e => e.ArtistId == id);
-        }
     }
 }

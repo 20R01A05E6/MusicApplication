@@ -1,23 +1,28 @@
 using Microsoft.EntityFrameworkCore;
 using Melody.Data;
 using Melody.Models;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Melody.Authorization;
+using Microsoft.AspNetCore.Authorization;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure DbContext
 builder.Services.AddDbContext<MelodyContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("mvcapplication") ?? throw new InvalidOperationException("Connection string 'MelodyContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("mvcapplication")
+    ?? throw new InvalidOperationException("Connection string 'MelodyContext' not found.")));
 
-//builder.Services.AddIdentity<ApplicationUser, IdentityRole>();
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
-// Add session support
+// Add session services
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
@@ -32,14 +37,16 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-// Enable session middleware
-app.UseSession();
+app.UseSession(); // Enable session middleware
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();
+
 
 /*app.UseEndpoints(endpoints =>
 {
@@ -58,5 +65,3 @@ app.MapControllerRoute(
         pattern: "{controller=Home}/{action=Index}/{id?}"
         );
 });*/
-
-app.Run();
