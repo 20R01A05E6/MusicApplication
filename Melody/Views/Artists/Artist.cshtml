@@ -67,7 +67,7 @@
         width: 80%;
         height: 80%;
         border-radius: 50%;
-        background: conic-gradient(#ff6347, #ff6347);
+        background: conic-gradient(#1db954, #1db954);
         cursor: pointer;
         outline: none;
     }
@@ -92,16 +92,16 @@
     @@keyframes borderAnimate {
         0% {
             transform: rotate(0);
-            background: conic-gradient(#ff6347, transparent 20%);
+            background: conic-gradient(#1db954, transparent 20%);
         }
 
         80% {
-            background: conic-gradient(#ff6347, transparent 90%);
+            background: conic-gradient(#1db954, transparent 90%);
         }
 
         100% {
             transform: rotate(360deg);
-            background: conic-gradient(#ff6347, #ff6347);
+            background: conic-gradient(#1db954, #1db954);
         }
     }
 
@@ -111,7 +111,7 @@
         height: 30px;
         left: 65%;
         top: 53%;
-        background-color: #ff6347;
+        background-color: #1db954;
         transform: translate(-60%, -50%) rotate(90deg);
         clip-path: polygon(50% 15%, 0% 100%, 100% 100%);
         transition: all 400ms ease-in-out;
@@ -137,7 +137,7 @@
             position: absolute;
             width: 0%;
             height: 100%;
-            background-color: #ff6347;
+            background-color: #1db954;
             left: 0;
         }
 
@@ -146,7 +146,7 @@
             position: absolute;
             width: 0;
             height: 100%;
-            background-color: #ff6347;
+            background-color: #1db954;
             right: 0;
         }
 
@@ -336,51 +336,6 @@
         color: white;
     }
 
-    .ellipsis-menu {
-        cursor: pointer;
-        font-size: 24px;
-        color: white;
-        position: relative;
-    }
-
-    .menu-options {
-        display: none; /* Initially hidden */
-        position: absolute;
-        right: 0;
-        top: 30px;
-        background-color: #444;
-        border-radius: 5px;
-        width: 150px;
-        z-index: 10;
-    }
-
-        .menu-options ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-            .menu-options ul li {
-                padding: 10px;
-                color: white;
-                cursor: pointer;
-            }
-
-                .menu-options ul li:hover {
-                    background-color: #555;
-                }
-
-        /* Divider for menu options */
-        .menu-options .divider {
-            border-top: 1px solid #666;
-            margin: 5px 0;
-        }
-
-        /* Hide the menu options by default */
-        .menu-options.hidden {
-            display: none;
-        }
-
     .play-action {
         --color: #ffffff;
         --size: 45px;
@@ -453,12 +408,10 @@
                     </label>
                 </div>
                 <div class="follow-div">
-                    <button class="follow-btn" id="follow-btn" onclick="toggleFollow()">
+                    <button class="follow-btn" id="follow-btn" onclick="toggleFollow(@Model.ArtistId, this)">
                         <span id="follow-text">Follow</span>
                     </button>
-                    @* <button class="follow-btn" id="follow-btn" onclick="toggleFollow(@Model.ArtistId, @userId)">
-                    <span id="follow-text">Follow</span>
-                    </button> *@
+
                 </div>
 
             </div>
@@ -628,17 +581,29 @@
     // Add event listener for Play All toggle
     document.getElementById('play-all-toggle').addEventListener('change', togglePlayAll);
 
-    function toggleFollow() {
-        const followBtn = document.getElementById('follow-btn');
-        const followText = document.getElementById('follow-text');
+    function toggleFollow(artistId) {
+        const followButton = document.getElementById("follow-btn");
+        const followText = document.getElementById("follow-text");
 
-        if (followText.innerText === 'Follow') {
-            followText.innerText = 'Following';
-            followBtn.classList.add('following');
-        } else {
-            followText.innerText = 'Follow';
-            followBtn.classList.remove('following');
-        }
+        fetch(`/Following/ToggleFollow`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]').value
+            },
+            body: JSON.stringify({ ArtistId: artistId })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "followed") {
+                    followText.textContent = "Following"; // Change button text to "Following"
+                } else if (data.status === "unfollowed") {
+                    followText.textContent = "Follow"; // Change button text back to "Follow"
+                } else {
+                    console.error("Unexpected status:", data.status);
+                }
+            })
+            .catch(error => console.error("Error:", error));
     }
 
 </script>

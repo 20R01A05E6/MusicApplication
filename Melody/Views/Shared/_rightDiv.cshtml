@@ -37,9 +37,42 @@
                 background-color: #555;
             }
 
-            /* Icon for external links */
-            .dropdown a .external-icon {
-                margin-left: 5px;
+    /* Library dropdown */
+    .library-dropdown {
+        opacity: 0; /* Hidden initially */
+        visibility: hidden;
+        position: absolute;
+        right: 160px; /* Adjust according to your layout */
+        top: 60px; /* Position under the Library button */
+        background-color: #444;
+        min-width: 160px;
+        border-radius: 5px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        transition: visibility 0s, opacity 0.3s ease;
+    }
+
+        /* When visible */
+        .library-dropdown.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Dropdown menu items */
+        .library-dropdown a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #555;
+        }
+
+            .library-dropdown a:last-child {
+                border-bottom: none;
+            }
+
+            .library-dropdown a:hover {
+                background-color: #555;
             }
 
     .anchor {
@@ -109,13 +142,20 @@
         }
     }
 
-</style>
+    /* Profile icon */
+    .profile-icon {
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
 
+</style>
 <div class="div-navbar">
     <!--Search icon-->
     <form asp-action="Search" method="get" class="search-form">
         <div class="input-wrapper">
-            <input placeholder="Search" class="input" name="text" type="text" />
+            <input placeholder="Search" class="input" name="query" type="text" />  <!-- Change name="text" to name="query" -->
             <span class="search-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
                     <circle cx="11" cy="11" r="8"></circle>
@@ -126,15 +166,24 @@
     </form>
 
 
-
     <!-- Navigation buttons -->
     <button class="button active"><a class="anchor" href="/Podcast/Index">Podcasts</a></button>
     <button class="button"><a class="anchor" href="/Channel/Index">Channels</a></button>
-    <button class="button">Library </button>
+
+    <!-- Library button with dropdown -->
+    <button class="button" onclick="toggleLibraryDropdown()">Library</button>
+    <div id="libraryDropdownMenu" class="library-dropdown">
+        <a href="@Url.Action("Following", "Home")">Following</a>
+        <a href="@Url.Action("Playlist", "Home")">Playlists</a>
+        <a href="@Url.Action("Songslist", "Home")">AllSongs</a>
+    </div>
+
     <button class="button">
         <!-- Notification Bell -->
         <a class="anchor" href="/Home/Notification">
-            <svg viewBox="0 0 448 512" class="bell" style="width: 20px; height: 20px; fill: white;"><path d="M224 0c-17.7 0-32 14.3-32 32V49.9C119.5 61.4 64 124.2 64 200v33.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416H424c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4V200c0-75.8-55.5-138.6-128-150.1V32c0-17.7-14.3-32-32-32zm0 96h8c57.4 0 104 46.6 104 104v33.4c0 47.9 13.9 94.6 39.7 134.6H72.3C98.1 328 112 281.3 112 233.4V200c0-57.4 46.6-104 104-104h8zm64 352H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z"></path></svg>
+            <svg viewBox="0 0 448 512" class="bell" style="width: 20px; height: 20px; fill: white;">
+                <path d="M224 0c-17.7 0-32 14.3-32 32V49.9C119.5 61.4 64 124.2 64 200v33.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416H424c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4V200c0-75.8-55.5-138.6-128-150.1V32c0-17.7-14.3-32-32-32zm0 96h8c57.4 0 104 46.6 104 104v33.4c0 47.9 13.9 94.6 39.7 134.6H72.3C98.1 328 112 281.3 112 233.4V200c0-57.4 46.6-104 104-104h8zm64 352H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z"></path>
+            </svg>
         </a>
     </button>
 
@@ -143,25 +192,30 @@
         <img src="~/images/user_logo.jpg" alt="Profile" class="profile-icon" onclick="toggleDropdown()">
         <div id="dropdownMenu" class="dropdown">
             <a href="@Url.Action("Profile", "Home")">Profile</a>
-            <a href="@Url.Action("Subscription","Signup")">Upgrade to Premium <span class="external-icon">🔗</span></a>
-            <a href="@Url.Action("Settings","Home")">Settings</a>
+            <a href="@Url.Action("Subscription", "Signup")">Upgrade to Premium <span class="external-icon">🔗</span></a>
+            <a href="@Url.Action("Settings", "Home")">Settings</a>
             <a asp-action="Logout" class="btn btn-danger">Logout</a>
         </div>
     </div>
-
 </div>
 
-<!-- JavaScript for toggling the dropdown -->
+<!-- JavaScript for toggling the dropdowns -->
 <script>
-    // JavaScript for toggling the dropdown
+    // Toggle the dropdown for the profile icon
     function toggleDropdown() {
         var dropdown = document.getElementById("dropdownMenu");
-        dropdown.classList.toggle("show"); // Toggle the 'show' class
+        dropdown.classList.toggle("show");
     }
 
-    // Close the dropdown if clicked outside
+    // Toggle the dropdown for the Library button
+    function toggleLibraryDropdown() {
+        var dropdown = document.getElementById("libraryDropdownMenu");
+        dropdown.classList.toggle("show");
+    }
+
+    // Close any dropdown if clicked outside
     window.onclick = function (event) {
-        if (!event.target.matches('.profile-icon')) {
+        if (!event.target.matches('.profile-icon') && !event.target.matches('.button')) {
             var dropdowns = document.getElementsByClassName("dropdown");
             for (var i = 0; i < dropdowns.length; i++) {
                 var openDropdown = dropdowns[i];
@@ -169,7 +223,14 @@
                     openDropdown.classList.remove('show');
                 }
             }
+
+            var libraryDropdowns = document.getElementsByClassName("library-dropdown");
+            for (var j = 0; j < libraryDropdowns.length; j++) {
+                var openLibraryDropdown = libraryDropdowns[j];
+                if (openLibraryDropdown.classList.contains('show')) {
+                    openLibraryDropdown.classList.remove('show');
+                }
+            }
         }
     }
-
 </script>

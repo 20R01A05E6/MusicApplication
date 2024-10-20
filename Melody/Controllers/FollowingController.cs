@@ -4,20 +4,17 @@ using Microsoft.EntityFrameworkCore;
 using Melody.Data;
 using Melody.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Melody.Controllers
 {
+    [Authorize]
     public class FollowingController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IAntiforgery _antiforgery;
         private readonly MelodyContext _context;
-
-        public FollowingController(MelodyContext context,IAntiforgery antiforgery,UserManager<ApplicationUser> userManager)
+        public FollowingController(MelodyContext context)
         {
             _context = context;
-            _antiforgery = antiforgery;
-            _userManager = userManager;
         }
 
         // GET: Following
@@ -28,35 +25,36 @@ namespace Melody.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Follow([FromBody] Following model)
+        public async Task<IActionResult> ToggleFollow([FromBody] int artistId)
         {
-            var userId = model.UserId;
-            var artistId = model.ArtistId;
-            var existingFollow = await _context.Following
+            // Assuming you have the UserId stored in session
+            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
+
+            // Check if the user is already following the artist
+            var following = await _context.Following
                 .FirstOrDefaultAsync(f => f.UserId == userId && f.ArtistId == artistId);
 
-            if (existingFollow != null)
+            if (following != null)
             {
-                // Unfollow the artist (remove from the database)
-                _context.Following.Remove(existingFollow);
+                // User is following, so unfollow
+                _context.Following.Remove(following);
                 await _context.SaveChangesAsync();
-
-                return Json(new { isFollowing = false });
+                return Json(new { status = "unfollowed" });
             }
             else
             {
-                // Follow the artist (add to the database)
-                var follow = new Following
+                // User is not following, so follow
+                var newFollowing = new Following
                 {
                     UserId = userId,
                     ArtistId = artistId
                 };
-                _context.Following.Add(follow);
+                _context.Following.Add(newFollowing);
                 await _context.SaveChangesAsync();
-
-                return Json(new { isFollowing = true });
+                return Json(new { status = "followed" });
             }
         }
+
 
     }
 }

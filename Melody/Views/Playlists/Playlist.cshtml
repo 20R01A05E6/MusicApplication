@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Playlist";
+}
+<style>
+    .playlist{
+        border-radius:25px;
+        background-color:#333;
+        widht:auto;
+        height:auto;
+        padding:15px;
+    }
+    .add-song button{
+        background-color:green;
+        color:black;
+        border-radius:25px;
+    }
+</style>
+
+<div class="container">
+    @await Html.PartialAsync("_leftDiv")
+    <div class="div-right">
+        @await Html.PartialAsync("_rightDiv")
+        <div class="playlist">
+            <h3>Playlists</h3>
+            <div class="add-song">
+                <button>Add Song</button>
+            </div>
+        </div>
+    </div>
+</div>
+

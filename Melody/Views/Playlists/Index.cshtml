@@ -2,41 +2,86 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "Albums";
 }
+<style>
+    .container .div-right .Playlists {
+        display: flex;
+        flex-wrap: wrap;
+        background-color: #333;
+        border-radius: 25px;
+        height: auto;
+        width: auto; /* Full width */
+        gap: 7px;
+    }
 
-<h1>Index</h1>
+    .Playlist-list {
+        width: 120px;
+        border-radius: 25px;
+        height: auto;
+        background-color: black;
+        margin: 5px;
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Email)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.PlaylistId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.PlaylistId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.PlaylistId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    .Playlist-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        position: relative; /* Ensures hover title is positioned correctly */
+    }
+
+    .Playlist-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 25px;
+        object-fit: cover; /* Ensure the image fits the circle properly */
+        border: 2px solid #5fd068;
+    }
+
+    /* Hidden title that appears on hover */
+    .Playlist-title {
+        position: absolute;
+        bottom: -20px; /* Position below the Playlist */
+        text-align: center;
+        font-size: 14px;
+        color: #fff;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none; /* Prevent interaction with the title */
+    }
+
+    /* Show title on hover */
+    .Playlist-container:hover .Playlist-title {
+        opacity: 1;
+    }
+
+    .div-right h3 {
+        width: 100px;
+        margin: 5px;
+        margin-left: 15px;
+        padding: 0;
+    }
+</style>
+
+<div class="container">
+    @await Html.PartialAsync("_leftDiv")
+    <div class="div-right">
+        @await Html.PartialAsync("_rightDiv")
+        <h3>Playlist</h3>
+        <div class="Playlists">
+            @foreach (var playlist in Model)
+            {
+                <div class="Playlist-list">
+                    <div class="Playlist-container">
+                        <a href="@Url.Action("Playlist", "Playlists", new { id = playlist.PlaylistId })">
+                            <img src="~/images/DeviSriPrasad.jpg" class="Playlist-image" alt="@playlist.Name" />
+                        </a>
+                        <div class="Playlist-title">@playlist.Name</div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

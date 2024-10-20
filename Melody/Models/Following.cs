@@ -14,6 +14,7 @@ namespace Melody.Models
         [ForeignKey("Artist")]
         public int ArtistId { get; set; }
 
+
         public UserDetails User { get; set; }
         public Artist Artist { get; set; }
     }

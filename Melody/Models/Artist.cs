@@ -19,6 +19,7 @@ namespace Melody.Models
         [MaxLength(50)]
         public string ImagePath { get; set; }
 
+
         // Relationships
         public ICollection<Album> Albums { get; set; }
         public ICollection<Song> Songs { get; set; }

@@ -36,7 +36,20 @@ namespace Melody.Controllers
         [SubscriptionAuthorize("Free")]
         public IActionResult Profile()
         {
-            return View();
+            var artists = _context.Artists.ToList();
+            var albums = _context.Albums.ToList();
+            var podcasts = _context.Podcasts.ToList();
+            var playlists = _context.Playlists.ToList();
+
+            var viewModel = new HomeViewModel
+            {
+                Artists = artists,
+                Albums = albums,
+                Podcasts = podcasts,
+                Playlists = playlists
+            };
+
+            return View(viewModel);
         }
 
         // Settings
@@ -48,11 +61,17 @@ namespace Melody.Controllers
         }
 
         // Ensure only subscribed users can view the artists page
-        [SubscriptionAuthorize]
+        [SubscriptionAuthorize("Free")]
         public IActionResult Artists()
         {
             var artists = _context.Artists.ToList();
             return View(artists);
+        }
+
+        [SubscriptionAuthorize("Free")]
+        public IActionResult Playlist()
+        {
+            return RedirectToAction("Index", "Playlists");
         }
 
 
@@ -73,9 +92,8 @@ namespace Melody.Controllers
             if (album != null)
             {
                 searchResults.Albums.Add(album);
-                Console.WriteLine("Album found: " + album.Title);
-                ViewBag.ResultType = "Album";  // Set a flag for the view
-                return View(searchResults);    // Return the view with the album
+                ViewBag.ResultType = "Album";  // Set the result type for the view
+                return View(searchResults);    // Return the view with the album data
             }
 
             // Search for artist
@@ -84,29 +102,40 @@ namespace Melody.Controllers
             if (artist != null)
             {
                 searchResults.Artists.Add(artist);
-                Console.WriteLine("Artist found: " + artist.Name);
-                ViewBag.ResultType = "Artist"; 
-                return View(searchResults);  
+                ViewBag.ResultType = "Artist";  // Set the result type for the view
+                return View(searchResults);     // Return the view with the artist data
             }
 
             // Search for song
             var song = await _context.Songs
+                                      .Include(s => s.Album) // Include Album details to show in the view
                                       .FirstOrDefaultAsync(s => s.Name.ToLower().Contains(loweredQuery));
             if (song != null)
             {
                 searchResults.Songs.Add(song);
-                Console.WriteLine("Song found: " + song.Name);
-                ViewBag.ResultType = "Song";
-                return View(searchResults);
+                ViewBag.ResultType = "Song";  // Set the result type for the view
+                return View(searchResults);   // Return the view with the song data
             }
 
             // No results found
             ViewBag.Message = "No results found for your search.";
-            ViewBag.ResultType = "None";  // No results found flag
-            return View(new SearchResultViewModel());
+            ViewBag.ResultType = "None";  // No results found
+            return View(searchResults);
         }
-        
-        
+        public IActionResult Songslist()
+        {
+            // Fetch all songs from the database
+            var songs = _context.Songs.Include(s => s.Album).Include(s => s.Artist).ToList(); // Include related data if necessary
+            var searchResults = new SearchResultViewModel
+            {
+                Songs = songs
+            };
+
+            return View(searchResults); // Return the view with the song data
+        }
+
+
+
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();

@@ -21,32 +21,41 @@ namespace Melody.Controllers
             return View(await melodyContext.ToListAsync());
         }
 
-        // POST: Playlists/Create
         [HttpPost]
-        public JsonResult Create([FromBody] dynamic data)
+        [Route("api/Playlists")]
+        public async Task<IActionResult> CreatePlaylist([FromBody] Playlist model)
         {
-            string playlistName = data.name;
+            // Retrieve UserId from session
+            var userId = HttpContext.Session.GetInt32("UserId");
 
-            if (!string.IsNullOrEmpty(playlistName))
+            if (userId == null)
             {
-                // Check if the playlist name already exists (case-insensitive)
-                var existingPlaylist = _context.Playlists
-                    .FirstOrDefault(p => p.Name.Equals(playlistName, StringComparison.OrdinalIgnoreCase));
-
-                if (existingPlaylist != null)
-                {
-                    return Json(new { success = false }); // Playlist name already exists
-                }
-
-                // Add the new playlist to the database
-                var newPlaylist = new Playlist { Name = playlistName };
-                _context.Playlists.Add(newPlaylist);
-                _context.SaveChanges();
-
-                return Json(new { success = true }); // Successful creation
+                return Unauthorized(new { success = false, message = "User is not logged in." });
             }
 
-            return Json(new { success = false }); // Name is empty or invalid
+            if (string.IsNullOrEmpty(model.Name) || model.Name.Length > 100)
+            {
+                return BadRequest(new { success = false, message = "Invalid playlist name." });
+            }
+
+            // Create a new playlist object
+            var newPlaylist = new Playlist
+            {
+                Name = model.Name,
+                UserId = userId.Value,  // Assign the UserId from the session
+            };
+
+            // Save the new playlist to the database
+            _context.Playlists.Add(newPlaylist);
+            await _context.SaveChangesAsync();
+
+            // Return success response with the new playlist ID
+            return Ok(new { success = true, playlistId = newPlaylist.PlaylistId });
+        }
+
+        public IActionResult Playlist()
+        {
+            return View();
         }
 
     }

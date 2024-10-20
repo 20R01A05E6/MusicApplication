@@ -134,71 +134,56 @@
         border-radius: 50%;
         height: 25px;
     }
-
-    /* Modal Styles */
-    .create-playlist {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
+    /* Modal styles */
+    .modal {
+        position: fixed;
+        z-index: 1;
         left: 0;
         top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
-        backdrop-filter: blur(5px); /* Blur effect */
-        display:flex;
-        flex-direction:column;
-        gap:15px;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Dark background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
-    .content {
+    .modal-content {
         background-color: black;
-        color: white;
-        margin: 15% auto; /* 15% from the top and centered */
         padding: 20px;
-        border: 1px solid white;
         border-radius: 25px;
-        width: 40%; /* Could be more or less, depending on screen size */
+        text-align: center;
+        width: 300px;
     }
-    .create-playlist-heading{
-        display:flex;
-        justify-content:space-between;
+
+    .playlist-input {
+        width: 90%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
     }
-        .content h2 {
-            margin-top: 0;
-            justify-content:center;
+
+    button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        button#closeModalBtn {
+            background-color: #d9534f; /* Red button for cancel */
+            margin-left: 10px;
         }
 
-        .content input {
-            width: 30%;
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 5px;
-        }
-        .form-group{
-            display:flex;
-            flex-direction:row;
-            gap:5px;
-            width:auto;
-        }
-        .content button {
-            background-color: #1db954; /* Spotify-like green */
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    .modal button#createPlaylistBtn {
+        background-color: #1db954; /* Green button for creating playlist */
+    }
 
-            .content button:hover {
-                background-color: #17a247; /* Slightly darker on hover */
-            }
-            .close{
-                display:flex;
-                justify-content:center;
-            }
+    /* Blur background when modal is open */
+    .blurred {
+        filter: blur(10px);
+    }
 
 </style>
 
@@ -239,100 +224,56 @@
         </div>
     </div>
 </div>
-<div class="create-playlist" id="create-playlist">
-    <div class="content">
-        <div class="create-playlist-heading">
-            <h2>Create Playlist</h2>
-            <span>&times;</span>
-        </div>
-        <form method="post" asp-action="Create" asp-controller="Playlists">
-            <div class="form-group">
-                <input type="text" id="playlistName" name="playlistName" required />
-                <button type="submit">Create</button>
-            </div>
-        </form>
-        <button id="close-create-playlist" class="close">Close</button>
-    </div>
-</div>
-
-<script>
-    // Get the modal and buttons
-    const openModalButton = document.getElementById("openCreateModal");
-    const modal = document.getElementById("create-playlist");
-    const closeModalButton = document.getElementById("close-create-playlist");
-
-    // Function to open the modal
-    openModalButton.addEventListener("click", () => {
-        modal.style.display = "block";
-    });
-
-    // Function to close the modal
-    closeModalButton.addEventListener("click", () => {
-        modal.style.display = "none";
-    });
-
-    // Close the modal when clicking outside of it
-    window.addEventListener("click", (event) => {
-        if (event.target === modal) {
-            modal.style.display = "none";
-        }
-    });
-
-    // Optional: Close the modal when the 'Esc' key is pressed
-    window.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-            modal.style.display = "none";
-        }
-    });
-</script>
-
-@* <!-- Modal Structure -->
-<div id="createPlaylistModal" class="modal">
+<!-- Modal for Creating Playlist -->
+<div id="createPlaylistModal" class="modal" style="display:none;">
     <div class="modal-content">
-        <h2>Create Playlist</h2>
-        <form id="createPlaylistForm">
-            <label for="playlistName">Playlist Name:</label>
-            <input type="text" id="playlistName" name="playlistName" required />
-            <button type="submit">Create</button>
-        </form>
-        <button id="closeModal">Close</button>
+        <h3>Create Playlist</h3>
+        <input type="text" id="playlistName" class="playlist-input" placeholder="Enter playlist name" />
+        <button id="createPlaylistBtn">Create</button>
+        <button id="closeModalBtn">Cancel</button>
     </div>
 </div>
-
-
 <script>
-    document.getElementById("openCreateModal").onclick = function () {
-        document.getElementById("createPlaylistModal").style.display = "block";
-    }
+    // Open modal and blur background
+    document.getElementById('openCreateModal').addEventListener('click', function () {
+        document.getElementById('createPlaylistModal').style.display = 'flex';
+        document.querySelector('.div-left').classList.add('blurred');
+    });
 
-    document.getElementById("closeModal").onclick = function () {
-        document.getElementById("createPlaylistModal").style.display = "none";
-    }
+    // Close modal
+    document.getElementById('closeModalBtn').addEventListener('click', function () {
+        document.getElementById('createPlaylistModal').style.display = 'none';
+        document.querySelector('.div-left').classList.remove('blurred');
+    });
 
-    document.getElementById("createPlaylistForm").onsubmit = function (event) {
-        event.preventDefault();
+    // Create playlist
+    document.getElementById('createPlaylistBtn').addEventListener('click', function () {
+        const playlistName = document.getElementById('playlistName').value;
 
-        const playlistName = document.getElementById("playlistName").value;
-
-        fetch('/Playlists/Create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name: playlistName }) // Sending 'name' field
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Playlist created successfully!");
-                    // Optionally, refresh the page or update the UI
-                } else {
-                    alert("Playlist name already exists!");
-                }
-                // Close the modal
-                document.getElementById("createPlaylistModal").style.display = "none";
+        if (playlistName) {
+            // Make an AJAX call to save the playlist in the database
+            fetch('/api/Playlists', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: playlistName })
             })
-            .catch(error => console.error('Error:', error));
-    }
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Redirect to the new playlist page
+                        window.location.href = `/Playlists/Index/${data.PlaylistId}`;
+                    } else {
+                        alert('Error creating playlist');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        } else {
+            alert('Please enter a playlist name.');
+        }
+    });
 
-</script> *@
+</script>

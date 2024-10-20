@@ -113,14 +113,14 @@ namespace Melody.Controllers
         }
 
         // Subscription
-        [Authorize]
+        [SubscriptionAuthorize("Free")]
         public IActionResult Subscription()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize]
+        [SubscriptionAuthorize("Free")]
         public async Task<IActionResult> Subscription(string newSubscriptionType)
         {
             var userId = int.Parse(User.FindFirst("UserId")?.Value); // Get UserId from claims

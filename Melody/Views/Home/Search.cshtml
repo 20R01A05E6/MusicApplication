@@ -10,6 +10,7 @@
         background-color: #333;
         border-radius: 25px;
         padding: 15px;
+        overflow:hidden;
     }
 
     .Album-list, .Artist-list {
@@ -53,6 +54,165 @@
     .Album-container:hover .Album-title, .Artist-container:hover .Artist-title {
         opacity: 1;
     }
+
+
+    /*Song item*/
+    .songs-list {
+        margin: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .song-item {
+        display: flex;
+        flex-direction: row;
+        gap: 25px;
+        align-items: center;
+        width: 100%;
+        max-width: 100%;
+        height: 70px;
+        border-radius: 25px;
+        background-color: #212121;
+        padding: 10px;
+        box-sizing: border-box;
+        overflow: hidden;
+        position: relative; /* Position relative for absolute positioning of menu */
+    }
+
+    .song-left {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        width: 370px;
+    }
+
+    .song-middle {
+        width: 650px;
+        display:flex;
+        justify-content:flex-start;
+    }
+
+    .song-right {
+        display: flex;
+        flex-direction: row;
+        justify-content:flex-end;
+        align-items: center;
+        gap: 20px;
+        white-space: nowrap;
+        width: 100px;
+    }
+
+    .serial-number {
+        margin-right: 15px;
+        color: white;
+    }
+
+    .album-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 5px;
+        object-fit: cover;
+        margin-right: 15px;
+    }
+
+    .song-heading {
+        display: flex;
+        flex-direction: row;
+        margin-left: 15px;
+        height: 35px;
+    }
+
+        .song-heading .song-title {
+            margin-left: 75px;
+            width: 305px;
+        }
+
+        .song-heading .song-album {
+            width: 650px;
+        }
+
+        .song-heading .song-duration {
+            margin-left: 80px;
+            width: 50px;
+        }
+
+    .divider {
+        border: 1px solid white;
+        margin: 0;
+    }
+
+    .song-name {
+        color: white;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .play-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .duration {
+        color: white;
+    }
+
+    .play-action {
+        --color: #ffffff;
+        --size: 45px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        position: relative;
+        cursor: pointer;
+        font-size: var(--size);
+        user-select: none;
+        fill: var(--color);
+    }
+
+        .play-action .play {
+            position: absolute;
+            display: none; /* Display the play icon by default */
+            animation: keyframes-fill 0.3s;
+        }
+
+        .play-action .pause {
+            position: absolute;
+            display: block; /* Hide the pause icon by default */
+            animation: keyframes-fill 0.3s;
+        }
+
+        .play-action input:checked ~ .play {
+            display: block;
+        }
+
+        .play-action input:checked ~ .pause {
+            display: none;
+        }
+
+        .play-action input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+    @@keyframes keyframes-fill {
+        0% {
+            transform: scale(0.5);
+            opacity: 0;
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+    }
+
 </style>
 
 <div class="container">
@@ -95,14 +255,56 @@
             @if (ViewBag.ResultType == "Song")
             {
                 <h3>Songs</h3>
-                <ul>
-                    @foreach (var song in Model.Songs)
+                <div class="song-heading">
+                    <h4>#</h4>
+                    <div class="song-title">
+                        <h4>Title</h4>
+                    </div>
+                    <div class="song-album">
+                        <h4>Album</h4>
+                    </div>
+                    <div class="song-duration">
+                        <h4>Duration</h4>
+                    </div>
+                </div>
+                <hr class="divider">
+                <div class="songs-list">
+                    @for (int songNumber = 1; songNumber <= Model.Songs.Count; songNumber++)
                     {
-                        <li>
-                            <a href="@Url.Action("Song", "Songs", new { id = song.SongId })">@song.Name</a>
-                        </li>
+                        var song = Model.Songs[songNumber - 1]; // Get the song based on the index
+                        <div class="song-item">
+                            <!-- Left Div -->
+                            <div class="song-left">
+                                <span class="serial-number">@songNumber.</span>
+                                <img src="~/images/@song.Album?.ImagePath" alt="Album Image" class="album-image" />
+                                <h3 class="song-name">@song.Name</h3>
+                            </div>
+
+                            <!-- Middle Div (Album Name) -->
+                            <div class="song-middle">
+                                <h3 class="song-name">@song.Album?.Title</h3>
+                            </div>
+
+                            <!-- Right Div (Play Button, Duration, Ellipsis Menu) -->
+                            <div class="song-right">
+                                <div class="play-button">
+                                    <label class="play-action">
+                                        <input type="checkbox" id="play-toggle-@song.SongId" onclick="togglePlay('@song.SongId', '@song.FilePath')" />
+                                        <svg viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="pause" id="pause-icon-@song.SongId">
+                                            <path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"></path>
+                                        </svg>
+                                        <svg viewBox="0 0 320 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="play" id="play-icon-@song.SongId">
+                                            <path d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z"></path>
+                                        </svg>
+                                    </label>
+                                </div>
+                                <span class="duration" id="duration-@song.SongId">@song.Duration</span> <!-- Duration -->
+                            </div>
+                            <!-- Hidden audio element to play the song -->
+                            <audio id="audio-@song.SongId" src="~/songs/@song.FilePath"></audio>
+                        </div>
                     }
-                </ul>
+                </div>
             }
 
             @if (ViewBag.ResultType == "None")
@@ -112,3 +314,39 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    let currentSong = null; // Keeps track of the currently playing song
+
+    function togglePlay(songId) {
+        const audioElement = document.getElementById(`audio-${songId}`);
+        const playIcon = document.getElementById(`play-icon-${songId}`);
+        const pauseIcon = document.getElementById(`pause-icon-${songId}`);
+
+        // If there's a currently playing song and it's different from the clicked one, stop the current one
+        if (currentSong && currentSong !== songId) {
+            const currentAudio = document.getElementById(`audio-${currentSong}`);
+            const currentPlayIcon = document.getElementById(`play-icon-${currentSong}`);
+            const currentPauseIcon = document.getElementById(`pause-icon-${currentSong}`);
+
+            currentAudio.pause();
+            currentPlayIcon.style.display = 'none'; // Show play icon
+            currentPauseIcon.style.display = 'block'; // Hide pause icon
+        }
+
+        // Toggle play/pause for the clicked song
+        if (audioElement.paused) {
+            audioElement.play();
+            playIcon.style.display = 'block'; // Hide play icon
+            pauseIcon.style.display = 'none'; // Show pause icon
+            currentSong = songId; // Set the current song
+        } else {
+            audioElement.pause();
+            playIcon.style.display = 'none'; // Show play icon
+            pauseIcon.style.display = 'block'; // Hide pause icon
+            currentSong = null; // Clear the current song
+        }
+    }
+
+</script>
