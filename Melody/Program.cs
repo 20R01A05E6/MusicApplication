@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Melody.Data;
-using Melody.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Melody.Authorization;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.Identity.Client;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +18,46 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+});
+
+// JWT Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+
+        // Custom event to retrieve token from cookie
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var token = context.Request.Cookies["JwtToken"]; // Get token from cookie
+                if (!string.IsNullOrEmpty(token))
+                {
+                    context.Token = token; // Token validation
+                }
+                return Task.CompletedTask;
+            }
+        };
+    });
+
+
+// Add role-based authorization policies
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Free", policy => policy.RequireRole("Free"));
+    options.AddPolicy("Bronze", policy => policy.RequireRole("Bronze"));
+    options.AddPolicy("Silver", policy => policy.RequireRole("Silver"));
+    options.AddPolicy("Gold", policy => policy.RequireRole("Gold"));
 });
 
 

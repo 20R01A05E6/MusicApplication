@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Melody.Data;
-using Melody.Models;
 
 namespace Melody.Controllers
 {
@@ -21,6 +20,7 @@ namespace Melody.Controllers
         }
 
         // GET: Artists/Details/5
+        //[SubscriptionAuthorize("Free", "Bronze", "Silver", "Gold")]
         public async Task<IActionResult> Artist(int? id)
         {
             if (id == null)
@@ -31,6 +31,7 @@ namespace Melody.Controllers
             var artist = await _context.Artists
                 .Include(a=>a.Songs)
                 .Include(s=>s.Albums)
+                .Include(f => f.Followers)
                 .FirstOrDefaultAsync(m => m.ArtistId == id);
             if (artist == null)
             {

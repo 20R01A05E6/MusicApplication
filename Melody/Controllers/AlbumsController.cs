@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Melody.Data;
-using Melody.Models;
-
+/*using Melody.Authorization;
+*/
 namespace Melody.Controllers
 {
     public class AlbumsController : Controller
@@ -23,6 +22,7 @@ namespace Melody.Controllers
         }
 
         // GET: Albums/Details/5
+        //[SubscriptionAuthorize("Free", "Bronze", "Silver", "Gold")]
         public async Task<IActionResult> Album(int? id)
         {
             if (id == null)

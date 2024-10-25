@@ -31,7 +31,7 @@ namespace Melody.Filters
 
                 if (user == null || !_allowedSubscriptionTypes.Contains(user.SubscriptionType))
                 {
-                    context.Result = new ForbidResult(); // You can also redirect to an Access Denied view if needed
+                    context.Result = new RedirectToActionResult("AccessDenied", "Signup", null); // You can also redirect to an Access Denied view if needed
                 }
             }
         }

@@ -1,0 +1,125 @@
+﻿@{
+    ViewData["Title"] = "ProfileUpdate";
+}
+
+<style>
+    .profile-update {
+        width: auto;
+        height: auto;
+        background-color: #333;
+        padding: 15px;
+        border-radius: 25px;
+        color: white;
+        display:flex;
+        flex-direction:column;
+        gap:15px;
+    }
+
+    .formgroup {
+        margin-bottom: 15px;
+    }
+
+    .formlabel {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .forminput{
+        width: 40%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #555;
+        background-color: #444;
+        color: white;
+    }
+
+    .updatebutton {
+        background-color: #1db954;
+        cursor: pointer;
+        color:white;
+        border-radius:25px;
+    }
+
+        .updatebutton:hover {
+            background-color: #1a9e4a;
+        }
+
+    .subscriptionchange {
+        background-color: #ffa500;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 25px;
+        color: white;
+        border: none;
+        height:fit-content;
+    }
+
+        .subscriptionchange:hover {
+            background-color: #e69500;
+        }
+
+    .subscription{
+        display:flex;
+        flex-direction:row;
+        gap:15px;
+        align-items:center;
+    }
+
+    .subscription-info {
+        display: flex;
+        align-items: center;
+        width:fit-content;
+        gap: 15px;
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #444;
+        border-radius: 10px;
+        color: white;
+    }
+
+    .subscription-type {
+        font-weight: bold;
+    }
+</style>
+
+<div class="container">
+    @await Html.PartialAsync("_leftDiv")
+    <div class="div-right">
+        @await Html.PartialAsync("_rightDiv")
+        <div class="profile-update">
+            <h2>Profile Update</h2>
+
+            <form asp-action="ProfileUpdate" method="post" enctype="multipart/form-data">
+                <div class="formgroup">
+                    <label class="formlabel" for="firstname">First Name</label>
+                    <input class="forminput" type="text" id="firstname" name="Firstname" value="@Model.Firstname" required />
+                </div>
+
+                <div class="formgroup">
+                    <label class="formlabel" for="lastname">Last Name</label>
+                    <input class="forminput" type="text" id="lastname" name="Lastname" value="@Model.Lastname" required />
+                </div>
+
+                <div class="formgroup">
+                    <label class="formlabel" for="profileImage">Profile Image</label>
+                    <input class="forminput" type="file" id="profileImage" name="ProfileImage" accept="image/*" />
+                </div>
+
+                <button type="submit" class="updatebutton">Update Profile</button>
+            </form>
+
+            <!-- Display current subscription type -->
+            <div class="subscription-info">
+                <span>Current Subscription:</span>
+                <span class="subscription-type">@Model.SubscriptionType</span>
+            </div>
+
+            <div class="subscription">
+                <h3>Subscription</h3>
+                <button type="button" class="subscriptionchange" onclick="window.location.href='/Signup/Subscription'">
+                    Change Subscription
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

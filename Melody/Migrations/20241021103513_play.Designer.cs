@@ -4,6 +4,7 @@ using Melody.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Melody.Migrations
 {
     [DbContext(typeof(MelodyContext))]
-    partial class MelodyContextModelSnapshot : ModelSnapshot
+    [Migration("20241021103513_play")]
+    partial class play
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -331,11 +334,16 @@ namespace Melody.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<int?>("PlaylistId")
+                        .HasColumnType("int");
+
                     b.HasKey("SongId");
 
                     b.HasIndex("AlbumId");
 
                     b.HasIndex("ArtistId");
+
+                    b.HasIndex("PlaylistId");
 
                     b.ToTable("Songs");
                 });
@@ -364,9 +372,6 @@ namespace Melody.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProfileImagePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SubscriptionType")
@@ -505,6 +510,10 @@ namespace Melody.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Melody.Models.Playlist", null)
+                        .WithMany("Songs")
+                        .HasForeignKey("PlaylistId");
+
                     b.Navigation("Album");
 
                     b.Navigation("Artist");
@@ -534,6 +543,8 @@ namespace Melody.Migrations
                     b.Navigation("Albums");
 
                     b.Navigation("PlaylistSongs");
+
+                    b.Navigation("Songs");
                 });
 
             modelBuilder.Entity("Melody.Models.Podcast", b =>

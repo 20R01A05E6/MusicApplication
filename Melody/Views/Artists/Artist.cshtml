@@ -2,6 +2,11 @@
 @{
     ViewData["Title"] = "Artist";
     var songNumber = 1; // Initialize a counter for the serial number
+
+    var userId = Context.Session.GetInt32("UserId");
+
+    // Check if the user is following the artist
+    var isFollowing = Model.Followers != null && Model.Followers.Any(f => f.UserId == userId);
 }
 <style>
     .artist {
@@ -408,12 +413,18 @@
                     </label>
                 </div>
                 <div class="follow-div">
-                    <button class="follow-btn" id="follow-btn" onclick="toggleFollow(@Model.ArtistId, this)">
-                        <span id="follow-text">Follow</span>
+                    <button type="button" class="follow-btn" id="follow-btn" onclick="toggleFollow()">
+                        <span id="follow-text">@if (isFollowing)
+                            {
+                                <text>Following</text>
+                            }
+                            else
+                            {
+                                <text>Follow</text>
+                            }</span>
                     </button>
 
                 </div>
-
             </div>
             <div class="song-heading">
                 <h4>#</h4>
@@ -581,29 +592,27 @@
     // Add event listener for Play All toggle
     document.getElementById('play-all-toggle').addEventListener('change', togglePlayAll);
 
-    function toggleFollow(artistId) {
-        const followButton = document.getElementById("follow-btn");
-        const followText = document.getElementById("follow-text");
+    function toggleFollow() {
+        const followText = document.getElementById('follow-text');
+        const artistId = '@Model.ArtistId'; // Artist ID from the server
+        const userId = '@Context.Session.GetInt32("UserId")';
 
-        fetch(`/Following/ToggleFollow`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]').value
-            },
-            body: JSON.stringify({ ArtistId: artistId })
+        fetch('/Following/ToggleFollow', {
+            // Making an AJAX call to save the playlist in the database
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ artistId: artistId, userId: userId })
         })
             .then(response => response.json())
             .then(data => {
-                if (data.status === "followed") {
-                    followText.textContent = "Following"; // Change button text to "Following"
-                } else if (data.status === "unfollowed") {
-                    followText.textContent = "Follow"; // Change button text back to "Follow"
+                if (data.success) {
+                    followText.textContent = data.following ? 'Following' : 'Follow';
                 } else {
-                    console.error("Unexpected status:", data.status);
+                    console.error('Failed to update follow status');
                 }
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => console.error('Error:', error));
     }
+
 
 </script>

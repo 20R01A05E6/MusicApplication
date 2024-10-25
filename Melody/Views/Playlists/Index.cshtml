@@ -70,18 +70,19 @@
         @await Html.PartialAsync("_rightDiv")
         <h3>Playlist</h3>
         <div class="Playlists">
-            @foreach (var playlist in Model)
+            @foreach (var playlist in Model) // Model will only contain playlists for the logged-in user
             {
                 <div class="Playlist-list">
                     <div class="Playlist-container">
                         <a href="@Url.Action("Playlist", "Playlists", new { id = playlist.PlaylistId })">
-                            <img src="~/images/DeviSriPrasad.jpg" class="Playlist-image" alt="@playlist.Name" />
+                            <img src="~/images/default-image.png" class="Playlist-image" alt="@playlist.Name" />
                         </a>
                         <div class="Playlist-title">@playlist.Name</div>
                     </div>
                 </div>
             }
         </div>
+
     </div>
 </div>
 

@@ -246,12 +246,66 @@
         document.querySelector('.div-left').classList.remove('blurred');
     });
 
+    // Function to create playlist
+    function createPlaylist() {
+        const playlistName = document.getElementById('playlistName').value;
+
+        if (playlistName) {
+            // Making an AJAX call to save the playlist in the database
+            fetch('/api/Playlists', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: playlistName })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Redirect to the new playlist page
+                        window.location.href = `/Playlists/Index/${data.PlaylistId}`;
+                    } else {
+                        alert('Error creating playlist');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        } else {
+            alert('Please enter a playlist name.');
+        }
+    }
+
+    // Attach click event to the "Create" button
+    document.getElementById('createPlaylistBtn').addEventListener('click', createPlaylist);
+
+    // Trigger playlist creation on pressing Enter
+    document.getElementById('playlistName').addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            createPlaylist();
+        }
+    });
+</script>
+
+@* <script>
+    // Open modal and blur background
+    document.getElementById('openCreateModal').addEventListener('click', function () {
+        document.getElementById('createPlaylistModal').style.display = 'flex';
+        document.querySelector('.div-left').classList.add('blurred');
+    });
+
+    // Close modal
+    document.getElementById('closeModalBtn').addEventListener('click', function () {
+        document.getElementById('createPlaylistModal').style.display = 'none';
+        document.querySelector('.div-left').classList.remove('blurred');
+    });
+
     // Create playlist
     document.getElementById('createPlaylistBtn').addEventListener('click', function () {
         const playlistName = document.getElementById('playlistName').value;
 
         if (playlistName) {
-            // Make an AJAX call to save the playlist in the database
+            // Making an AJAX call to save the playlist in the database
             fetch('/api/Playlists', {
                 method: 'POST',
                 headers: {
@@ -276,4 +330,4 @@
         }
     });
 
-</script>
+</script> *@

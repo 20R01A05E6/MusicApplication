@@ -108,11 +108,17 @@
         width: 80%;
     }
 
-    .anchor {
+    .gold-anchor,
+    .silver-anchor,
+    .bronze-anchor,
+    .free-anchor{
         text-decoration: none;
         display:flex;
         justify-content:center;
         color:black;
+        background-color: #828282;
+        border:none;
+        cursor:pointer;
     }
 
     .features {
@@ -127,15 +133,20 @@
         text-decoration:none;
         color:white;
     }
+    .form{
+        display:flex;
+        justify-content:center;
+    }
 </style>
 <div class="container">
     <div class="header">
         <div class="logo">
-            <img src="~/images/logo.png" alt="comapany-logo" class="company-logo" />
+            <img src="~/images/logo.png" alt="company-logo" class="company-logo" />
         </div>
         <a href="/Home/Index"><h3>SKIP</h3></a>
     </div>
     <div class="body">
+        <!-- Bronze Subscription Card -->
         <div class="subscription-card">
             <div class="bronze-cost">
                 <h2>₹116/- for 1 month</h2>
@@ -159,100 +170,113 @@
             <div class="divider">
                 <hr class="divider-line" />
             </div>
-            <a href="#" class="anchor">
-                <div class="buy-now">
+            <!-- Form to submit Bronze subscription -->
+            <form asp-action="Subscription" method="post" class="form">
+                <input type="hidden" name="newSubscriptionType" value="Bronze" />
+                <button type="submit" class="bronze-anchor">
                     <h1>Buy now</h1>
-                </div>
-            </a>
+                </button>
+            </form>
         </div>
 
-            <div class="subscription-card">
-                <div class="silver-cost">
-                    <h2>₹216/- for 1 month</h2>
-                </div>
-                <div class="subscription-type">
-                    <h1>Silver</h1>
-                </div>
-                <div class="divider">
-                    <hr class="divider-line" />
-                </div>
-                <div class="features">
-                    <ul class="features-list">
-                        <li>Two device access only</li>
-                        <li>Ad-Free</li>
-                        <li>Offline streaming</li>
-                        <li>Jam Sessions</li>
-                        <li>High quality streaming</li>
-                        <li>Limited downloads upto 100 songs</li>
-                    </ul>
-                </div>
-                <div class="divider">
-                    <hr class="divider-line" />
-                </div>
-                <a href="#" class="anchor">
-                    <div class="buy-now">
-                        <h1>Buy now</h1>
-                    </div>
-                </a>
+        <!-- Silver Subscription Card -->
+        <div class="subscription-card">
+            <div class="silver-cost">
+                <h2>₹216/- for 1 month</h2>
             </div>
-            <div class="subscription-card">
-                <div class="gold-cost">
-                    <h2>₹316/- for 1 month</h2>
-                </div>
-                <div class="subscription-type">
-                    <h1>Gold</h1>
-                </div>
-                <div class="divider">
-                    <hr class="divider-line" />
-                </div>
-                <div class="features">
-                    <ul class="features-list">
-                        <li>Can access upto 5 members</li>
-                        <li>Ad-Free</li>
-                        <li>Offline streaming</li>
-                        <li>Jam Sessions</li>
-                        <li>High quality streaming</li>
-                        <li>Unlimited downloads</li>
-                    </ul>
-                </div>
+            <div class="subscription-type">
+                <h1>Silver</h1>
+            </div>
             <div class="divider">
                 <hr class="divider-line" />
             </div>
-            <a href="#" class="anchor">
-                <div class="buy-now">
+            <div class="features">
+                <ul class="features-list">
+                    <li>Two device access only</li>
+                    <li>Ad-Free</li>
+                    <li>Offline streaming</li>
+                    <li>Jam Sessions</li>
+                    <li>High quality streaming</li>
+                    <li>Limited downloads upto 100 songs</li>
+                </ul>
+            </div>
+            <div class="divider">
+                <hr class="divider-line" />
+            </div>
+            <!-- Form to submit Silver subscription -->
+            <form asp-action="Subscription" method="post" class="form">
+                <input type="hidden" name="newSubscriptionType" value="Silver" />
+                <button type="submit" class="silver-anchor">
                     <h1>Buy now</h1>
-                </div>
-            </a>
+                </button>
+            </form>
+        </div>
+
+        <!-- Gold Subscription Card -->
+        <div class="subscription-card">
+            <div class="gold-cost">
+                <h2>₹316/- for 1 month</h2>
             </div>
-            <div class="subscription-card">
-                <div class="cost">
-                    <h2>₹0/-</h2>
-                </div>
-                <div class="subscription-type">
-                    <h1>Free</h1>
-                </div>
-                <div class="divider">
-                    <hr class="divider-line" />
-                </div>
-                <div class="features">
-                    <ul class="features-list">
-                        <li>One device access only</li>
-                        <li>Contains Ads</li>
-                        <li>No Offline streaming</li>
-                        <li>No Jam Sessions</li>
-                        <li>Medium quality streaming</li>
-                        <li>Limited Features</li>
-                    </ul>
-                </div>
+            <div class="subscription-type">
+                <h1>Gold</h1>
+            </div>
             <div class="divider">
                 <hr class="divider-line" />
             </div>
-            <a href="#" class="anchor">
-                <div class="buy-now">
-                    <h1> No need to pay </h1>
-                </div>
-            </a>
+            <div class="features">
+                <ul class="features-list">
+                    <li>Can access up to 5 members</li>
+                    <li>Ad-Free</li>
+                    <li>Offline streaming</li>
+                    <li>Jam Sessions</li>
+                    <li>High quality streaming</li>
+                    <li>Unlimited downloads</li>
+                </ul>
             </div>
+            <div class="divider">
+                <hr class="divider-line" />
+            </div>
+            <!-- Form to submit Gold subscription -->
+            <form asp-action="Subscription" method="post" class="form">
+                <input type="hidden" name="newSubscriptionType" value="Gold" />
+                <button type="submit" class="gold-anchor">
+                    <h1>Buy now</h1>
+                </button>
+            </form>
+        </div>
+
+        <!-- Free Subscription Card -->
+        <div class="subscription-card">
+            <div class="cost">
+                <h2>₹0/-</h2>
+            </div>
+            <div class="subscription-type">
+                <h1>Free</h1>
+            </div>
+            <div class="divider">
+                <hr class="divider-line" />
+            </div>
+            <div class="features">
+                <ul class="features-list">
+                    <li>One device access only</li>
+                    <li>Contains Ads</li>
+                    <li>No Offline streaming</li>
+                    <li>No Jam Sessions</li>
+                    <li>Medium quality streaming</li>
+                    <li>Limited Features</li>
+                </ul>
+            </div>
+            <div class="divider">
+                <hr class="divider-line" />
+            </div>
+            <!-- Form to submit Free subscription -->
+            <form asp-action="Subscription" method="post" class="form">
+                <input type="hidden" name="newSubscriptionType" value="Free" />
+                <button type="submit" class="free-anchor">
+                    <h1>No need to pay</h1>
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 

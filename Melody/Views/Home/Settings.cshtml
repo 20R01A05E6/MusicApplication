@@ -10,21 +10,47 @@
         display: flex;
         flex-direction: column;
         padding: 20px;
+        color: white;
     }
 
-    .language {
+    .lang, .update-profile, .change-password {
         display: flex;
-        justify-content:flex-start;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
     }
 
-    .language-select {
-        margin-left: 15px;
+        .lang h3, .update-profile h3, .change-password h3 {
+            margin: 0;
+        }
+
+    .selector, .update-button {
         background-color: #555;
         color: white;
         border: none;
         padding: 10px;
         border-radius: 10px;
         cursor: pointer;
+        height: fit-content;
+        width:150px;
+    }
+
+    .selector {
+        margin-left: 15px;
+    }
+
+    .update-button {
+        background-color: #1db954;
+        width:150px;
+    }
+
+        .update-button:hover {
+            background-color: #1a9e4a;
+        }
+
+    .form {
+        display: flex;
+        align-items: center;
     }
 </style>
 
@@ -34,10 +60,11 @@
         @await Html.PartialAsync("_rightDiv")
         <div class="Settings">
             <h1>Settings</h1>
-            <div class="language">
+
+            <div class="lang">
                 <h3>Choose language</h3>
-                <form method="get" asp-action="Settings">
-                    <select id="languageSelector" name="lang" class="language-select" onchange="this.form.submit()">
+                <form method="get" asp-action="Settings" class="form">
+                    <select id="languageSelector" name="lang" class="selector" onchange="this.form.submit()">
                         <option value="en" selected>English</option>
                         <option value="fr">Français (French)</option>
                         <option value="es">Español (Spanish)</option>
@@ -46,6 +73,16 @@
                         <option value="te">తెలుగు (Telugu)</option>
                     </select>
                 </form>
+            </div>
+
+            <div class="update-profile">
+                <h3>Update Profile</h3>
+                <button type="button" class="update-button" onclick="window.location.href='/Home/ProfileUpdate'">Update Profile</button>
+            </div>
+
+            <div class="change-password">
+                <h3>Change Password</h3>
+                <button type="button" class="update-button" onclick="window.location.href='/Home/ChangePassword'">Change Password</button>
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-﻿using Melody.Data;
+﻿/*using Melody.Data;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,11 +6,11 @@ namespace Melody.Authorization
 {
     public class SubscriptionAuthorizeAttribute : ActionFilterAttribute
     {
-        private readonly string _subscriptionType;
+        private readonly string[] _subscriptionTypes; // Array of allowed subscription types
 
-        public SubscriptionAuthorizeAttribute(string subscriptionType)
+        public SubscriptionAuthorizeAttribute(params string[] subscriptionTypes)
         {
-            _subscriptionType = subscriptionType;
+            _subscriptionTypes = subscriptionTypes;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -24,18 +24,19 @@ namespace Melody.Authorization
                 return;
             }
 
-            // Fetch user from database
+            // Fetch user from the database
             using (var scope = context.HttpContext.RequestServices.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<MelodyContext>();
                 var user = dbContext.UserDetails.Find(sessionUserId);
 
-                // Check if user exists and subscription type matches
-                if (user == null || user.SubscriptionType != _subscriptionType)
+                // Check if the user exists and has an allowed subscription type
+                if (user == null || !_subscriptionTypes.Contains(user.SubscriptionType))
                 {
-                    context.Result = new ForbidResult(); // Or redirect to an access denied page
+                    context.Result = new RedirectToActionResult("AccessDenied","Signup",null); // Or redirect to an access denied page
                 }
             }
         }
     }
 }
+*/

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 namespace Melody.Models
 {
     public class UserDetails
@@ -24,6 +25,8 @@ namespace Melody.Models
         public string Password { get; set; }
 
         public string SubscriptionType { get; set; } = "Free";
+
+        public string? ProfileImagePath { get; set; }
 
         // Relationships
         public ICollection<Liked> LikedSongs { get; set; }

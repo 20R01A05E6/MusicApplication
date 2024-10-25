@@ -42,7 +42,7 @@
         opacity: 0; /* Hidden initially */
         visibility: hidden;
         position: absolute;
-        right: 160px; /* Adjust according to your layout */
+        right: 190px; /* Adjust according to your layout */
         top: 60px; /* Position under the Library button */
         background-color: #444;
         min-width: 160px;
@@ -74,6 +74,25 @@
             .library-dropdown a:hover {
                 background-color: #555;
             }
+
+    /* Style for the dropdown arrow */
+    .dropdown-arrow {
+        margin-left: 8px; /* Space between the text and the arrow */
+        display: inline-block;
+        transition: transform 0.3s ease; /* Smooth rotation effect */
+    }
+
+    /* Rotate the arrow when the dropdown is visible */
+    .library-dropdown.show + .dropdown-arrow svg {
+        transform: rotate(180deg); /* Rotate the arrow when the dropdown is shown */
+    }
+
+    .dropdown-arrow svg {
+        width: 15px;
+        height: 15px;
+        stroke: white;
+    }
+
 
     .anchor {
         text-decoration: none;
@@ -153,7 +172,7 @@
 </style>
 <div class="div-navbar">
     <!--Search icon-->
-    <form asp-action="Search" method="get" class="search-form">
+    <form asp-controller="Home" asp-action="Search" method="get" class="search-form">
         <div class="input-wrapper">
             <input placeholder="Search" class="input" name="query" type="text" />  <!-- Change name="text" to name="query" -->
             <span class="search-icon">
@@ -170,13 +189,21 @@
     <button class="button active"><a class="anchor" href="/Podcast/Index">Podcasts</a></button>
     <button class="button"><a class="anchor" href="/Channel/Index">Channels</a></button>
 
-    <!-- Library button with dropdown -->
-    <button class="button" onclick="toggleLibraryDropdown()">Library</button>
+    <!-- Library button with dropdown and arrow -->
+    <button class="button" onclick="toggleLibraryDropdown()">
+        Library
+        <span class="dropdown-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </span>
+    </button>
     <div id="libraryDropdownMenu" class="library-dropdown">
-        <a href="@Url.Action("Following", "Home")">Following</a>
-        <a href="@Url.Action("Playlist", "Home")">Playlists</a>
+        <a href="@Url.Action("Index", "Following")">Following</a>
+        <a href="@Url.Action("Index", "Playlists")">Playlists</a>
         <a href="@Url.Action("Songslist", "Home")">AllSongs</a>
     </div>
+
 
     <button class="button">
         <!-- Notification Bell -->
@@ -194,12 +221,11 @@
             <a href="@Url.Action("Profile", "Home")">Profile</a>
             <a href="@Url.Action("Subscription", "Signup")">Upgrade to Premium <span class="external-icon">🔗</span></a>
             <a href="@Url.Action("Settings", "Home")">Settings</a>
-            <a asp-action="Logout" class="btn btn-danger">Logout</a>
+            <a asp-controller="Home" asp-action="Logout" class="btn btn-danger">Logout</a>
         </div>
     </div>
 </div>
 
-<!-- JavaScript for toggling the dropdowns -->
 <script>
     // Toggle the dropdown for the profile icon
     function toggleDropdown() {

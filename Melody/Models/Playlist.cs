@@ -17,5 +17,6 @@ namespace Melody.Models
         // Relationships
         public UserDetails User { get; set; }
         public ICollection<PlaylistSong> PlaylistSongs { get; set; }
+        public ICollection<Album> Albums { get; set; }
     }
 }

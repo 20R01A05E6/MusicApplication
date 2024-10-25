@@ -4,6 +4,7 @@ using Melody.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Melody.Migrations
 {
     [DbContext(typeof(MelodyContext))]
-    partial class MelodyContextModelSnapshot : ModelSnapshot
+    [Migration("20241023055154_Imageupload")]
+    partial class Imageupload
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -367,6 +370,7 @@ namespace Melody.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfileImagePath")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SubscriptionType")

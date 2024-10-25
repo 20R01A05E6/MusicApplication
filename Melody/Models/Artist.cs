@@ -23,7 +23,7 @@ namespace Melody.Models
         // Relationships
         public ICollection<Album> Albums { get; set; }
         public ICollection<Song> Songs { get; set; }
-        public ICollection<Following> Followers { get; set; }
+        public ICollection<Following> Followers { get; set; } = new List<Following>();
     }
 
 }

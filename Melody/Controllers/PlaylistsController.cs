@@ -2,9 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Melody.Data;
 using Melody.Models;
+using Melody.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Melody.Controllers
 {
+    [Authorize]
     public class PlaylistsController : Controller
     {
         private readonly MelodyContext _context;
@@ -17,9 +20,20 @@ namespace Melody.Controllers
         // GET: Playlists
         public async Task<IActionResult> Index()
         {
-            var melodyContext = _context.Playlists.Include(p => p.User);
-            return View(await melodyContext.ToListAsync());
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return Unauthorized("User is not logged in.");
+            }
+
+            var userPlaylists = _context.Playlists
+                                        .Include(p => p.User)
+                                        .Where(p => p.UserId == userId.Value)
+                                        .ToListAsync();
+
+            return View(await userPlaylists);
         }
+
 
         [HttpPost]
         [Route("api/Playlists")]
@@ -53,10 +67,137 @@ namespace Melody.Controllers
             return Ok(new { success = true, playlistId = newPlaylist.PlaylistId });
         }
 
-        public IActionResult Playlist()
+
+        public async Task<IActionResult> Playlist(int id)
         {
-            return View();
+            // Retrieve UserId from session
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+            {
+                return Unauthorized("User is not logged in.");
+            }
+
+            // Load the playlist with songs, ensuring it belongs to the logged-in user
+            var playlist = await _context.Playlists
+                .Include(p => p.PlaylistSongs)
+                .ThenInclude(ps => ps.Song)
+                .ThenInclude(s => s.Album)  // Eager load Album data
+                .Where(p => p.UserId == userId.Value && p.PlaylistId == id)
+                .FirstOrDefaultAsync();
+
+
+            if (playlist == null)
+            {
+                return NotFound("Playlist not found or you do not have permission to access it.");
+            }
+
+            return View(playlist);
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> AddSongs(int playlistId)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+            {
+                return Unauthorized("User is not logged in.");
+            }
+
+            var playlist = await _context.Playlists
+                                         .Where(p => p.UserId == userId.Value && p.PlaylistId == playlistId)
+                                         .FirstOrDefaultAsync();
+
+            if (playlist == null)
+            {
+                return NotFound("Playlist not found or you do not have permission to access it.");
+            }
+
+            var existingSongIds = _context.PlaylistSongs
+                                          .Where(ps => ps.PlaylistId == playlistId)
+                                          .Select(ps => ps.SongId)
+                                          .ToList();
+
+            var songs = await _context.Songs
+                                      .Include(s => s.Album)  // Include the Album information
+                                      .Where(s => !existingSongIds.Contains(s.SongId))
+                                      .ToListAsync();
+
+            ViewBag.PlaylistId = playlistId;
+            return View(songs);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> SaveSongsToPlaylist(int playlistId, List<int> songIds)
+        {
+            // Get the current user's ID
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+            {
+                return Unauthorized("User is not logged in.");
+            }
+
+            // Get the playlist to verify it belongs to the current user
+            var playlist = await _context.Playlists
+                                         .Where(p => p.UserId == userId.Value && p.PlaylistId == playlistId)
+                                         .FirstOrDefaultAsync();
+
+            if (playlist == null)
+            {
+                return NotFound("Playlist not found or you do not have permission to access it.");
+            }
+
+            // Retrieve existing songs in the playlist to avoid duplicates
+            var existingSongIds = _context.PlaylistSongs
+                                          .Where(ps => ps.PlaylistId == playlistId)
+                                          .Select(ps => ps.SongId)
+                                          .ToList();
+
+            // Add selected songs that are not already in the playlist
+            foreach (var songId in songIds)
+            {
+                if (!existingSongIds.Contains(songId))  // Check if the song is already in the playlist
+                {
+                    var playlistSong = new PlaylistSong
+                    {
+                        PlaylistId = playlistId,
+                        SongId = songId,
+                        UserId = userId.Value  // Assign the UserId
+                    };
+                    _context.PlaylistSongs.Add(playlistSong);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Playlist", new { id = playlistId });
+        }
+
+
+        /*[HttpGet]
+        public IActionResult Library()
+        {
+            var email = HttpContext.Session.GetString("UserEmail");
+
+            // Get the user by email
+            var user = _context.UserDetails.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            // Fetch all playlists created by the user
+            var playlists = _context.Playlists
+                                    .Where(p => p.UserId == user.UserId)
+                                    .OrderByDescending(p => p.PlaylistId) // Display the newest playlists first
+                                    .ToList();
+
+            // Pass the playlists to the view
+            return View(playlists);
+        }*/
     }
 }

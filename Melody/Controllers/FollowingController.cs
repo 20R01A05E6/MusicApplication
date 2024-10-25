@@ -5,10 +5,11 @@ using Melody.Data;
 using Melody.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Melody.Filters;
 
 namespace Melody.Controllers
 {
-    [Authorize]
+    [SubscriptionAuthorize("Silver","Gold")]
     public class FollowingController : Controller
     {
         private readonly MelodyContext _context;
@@ -18,43 +19,62 @@ namespace Melody.Controllers
         }
 
         // GET: Following
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var melodyContext = _context.Following.Include(f => f.Artist).Include(f => f.User);
-            return View(await melodyContext.ToListAsync());
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Signup");
+            }
+
+            // Query only the records where UserId matches the current user's ID
+            var followingList = await _context.Following
+                .Where(f => f.UserId == userId.Value)
+                .Include(f => f.Artist)
+                .ToListAsync();
+
+            return View(followingList);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ToggleFollow([FromBody] int artistId)
+        public IActionResult ToggleFollow([FromBody] ToggleFollowRequest request)
         {
-            // Assuming you have the UserId stored in session
-            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
-
-            // Check if the user is already following the artist
-            var following = await _context.Following
-                .FirstOrDefaultAsync(f => f.UserId == userId && f.ArtistId == artistId);
-
-            if (following != null)
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
             {
-                // User is following, so unfollow
-                _context.Following.Remove(following);
-                await _context.SaveChangesAsync();
-                return Json(new { status = "unfollowed" });
+                return Unauthorized(new { success = false, message = "User not logged in" });
+            }
+
+            int artistId = request.ArtistId;
+
+            var artist = _context.Artists.Include(a => a.Followers).FirstOrDefault(a => a.ArtistId == artistId);
+            if (artist == null)
+            {
+                return NotFound(new { success = false, message = "Artist not found" });
+            }
+
+            var existingFollow = _context.Following.FirstOrDefault(f => f.UserId == userId && f.ArtistId == artistId);
+            bool isFollowing;
+
+            if (existingFollow != null)
+            {
+                // Unfollow
+                _context.Following.Remove(existingFollow);
+                isFollowing = false;
             }
             else
             {
-                // User is not following, so follow
-                var newFollowing = new Following
-                {
-                    UserId = userId,
-                    ArtistId = artistId
-                };
-                _context.Following.Add(newFollowing);
-                await _context.SaveChangesAsync();
-                return Json(new { status = "followed" });
+                // Follow
+                var newFollow = new Following { UserId = userId.Value, ArtistId = artistId };
+                _context.Following.Add(newFollow);
+                isFollowing = true;
             }
-        }
 
+            _context.SaveChanges();
+
+            return Json(new { success = true, following = isFollowing });
+        }
 
     }
 }

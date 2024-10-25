@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Melody.Data;
 using Melody.Models;
-
+using Melody.Filters;
+/*using Melody.Authorization;
+*/
 namespace Melody.Controllers
 {
     public class ChannelController : Controller
@@ -20,6 +22,7 @@ namespace Melody.Controllers
         }
 
         // GET: Channel
+        [SubscriptionAuthorize("Gold")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Channels.ToListAsync());
