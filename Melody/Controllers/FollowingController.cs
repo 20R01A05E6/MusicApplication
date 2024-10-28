@@ -9,7 +9,7 @@ using Melody.Filters;
 
 namespace Melody.Controllers
 {
-    [SubscriptionAuthorize("Silver","Gold")]
+    [SubscriptionAuthorize("Bronze","Silver","Gold")]
     public class FollowingController : Controller
     {
         private readonly MelodyContext _context;

@@ -99,6 +99,7 @@ namespace Melody.Controllers
             HttpContext.Session.SetString("UserEmail", user.Email);
             HttpContext.Session.SetInt32("UserId", user.UserId);
             HttpContext.Session.SetString("SubscriptionType", user.SubscriptionType);
+            HttpContext.Session.SetString("ProfileImagePath", user.ProfileImagePath ?? "/images/user_logo.jpg");
 
             // Optionally generate a JWT token
             var token = GenerateJwtToken(user);

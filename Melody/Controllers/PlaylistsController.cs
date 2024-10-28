@@ -130,7 +130,7 @@ namespace Melody.Controllers
         }
 
 
-        [HttpPost]
+        /*[HttpPost]
         public async Task<IActionResult> SaveSongsToPlaylist(int playlistId, List<int> songIds)
         {
             // Get the current user's ID
@@ -173,6 +173,73 @@ namespace Melody.Controllers
             }
 
             await _context.SaveChangesAsync();
+
+            return RedirectToAction("Playlist", new { id = playlistId });
+        }
+*/
+
+        [HttpPost]
+        public async Task<IActionResult> SaveSongsToPlaylist(int playlistId, List<int> songIds)
+        {
+            // Get the current user's ID
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+            {
+                return Unauthorized("User is not logged in.");
+            }
+
+            // Get the playlist to verify it belongs to the current user
+            var playlist = await _context.Playlists
+                                         .Where(p => p.UserId == userId.Value && p.PlaylistId == playlistId)
+                                         .FirstOrDefaultAsync();
+
+            if (playlist == null)
+            {
+                return NotFound("Playlist not found or you do not have permission to access it.");
+            }
+
+            // Retrieve existing songs in the playlist to avoid duplicates
+            var existingSongIds = _context.PlaylistSongs
+                                          .Where(ps => ps.PlaylistId == playlistId)
+                                          .Select(ps => ps.SongId)
+                                          .ToList();
+
+            // Track if a new song is added
+            bool isNewSongAdded = false;
+
+            // Add selected songs that are not already in the playlist
+            foreach (var songId in songIds)
+            {
+                if (!existingSongIds.Contains(songId)) // Check if the song is already in the playlist
+                {
+                    var playlistSong = new PlaylistSong
+                    {
+                        PlaylistId = playlistId,
+                        SongId = songId,
+                        UserId = userId.Value // Assign the UserId
+                    };
+                    _context.PlaylistSongs.Add(playlistSong);
+                    isNewSongAdded = true;
+
+                    // Set cover image if it's the first song being added
+                    if (string.IsNullOrEmpty(playlist.CoverImagePath) || playlist.CoverImagePath == "default-image.png")
+                    {
+                        var song = await _context.Songs.Include(s => s.Album)
+                                                        .FirstOrDefaultAsync(s => s.SongId == songId);
+
+                        if (song?.Album?.ImagePath != null)
+                        {
+                            playlist.CoverImagePath = song.Album.ImagePath;
+                        }
+                    }
+                }
+            }
+
+            if (isNewSongAdded)
+            {
+                await _context.SaveChangesAsync();
+            }
 
             return RedirectToAction("Playlist", new { id = playlistId });
         }

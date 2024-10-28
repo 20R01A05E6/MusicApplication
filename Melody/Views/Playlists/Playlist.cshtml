@@ -12,7 +12,24 @@
         padding: 15px;
     }
 
-    .add-song{
+    .playlist-details {
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+    }
+
+        .playlist-details .playlist-cover-image {
+            width: 20%;
+            height: 50%;
+            border-radius: 25px;
+        }
+
+        .playlist-details h3 {
+            display: flex;
+            align-items: flex-end;
+        }
+
+    .add-song {
         color: white;
         width: auto;
         border-radius: 25px;
@@ -22,16 +39,17 @@
         flex-direction: row;
         gap: 15px;
     }
-    .add-song .btn {
+
+        .add-song .btn {
             text-decoration: none;
             color: white;
             background-color: #1db954;
             border-radius: 25px;
             width: 8%;
-            display:flex;
-            justify-content:center;
+            display: flex;
+            justify-content: center;
             padding: 10px;
-    }
+        }
 
     .list {
         background-color: #333;
@@ -203,7 +221,12 @@
     <div class="div-right">
         @await Html.PartialAsync("_rightDiv")
         <div class="playlist">
-            <h3>Playlist Name : @Model?.Name</h3> <!-- Display playlist name -->
+            <div class="playlist-details">
+                <img src="~/images/@(Model.CoverImagePath ?? "default-image.png")" alt="Playlist Cover" class="playlist-cover-image" />
+
+                <h3>Playlist Name : @Model?.Name</h3> <!-- Display playlist name -->
+            </div>
+
             <div class="add-song">
                 <a asp-action="AddSongs" asp-route-playlistId="@Model?.PlaylistId" class="btn">
                     Add Song

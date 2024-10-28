@@ -81,7 +81,6 @@ namespace Melody.Controllers
             {
                 return NotFound("User not found");
             }
-
             // Fetch only the playlists belonging to the logged-in user
             var userPlaylists = _context.Playlists
                                         .Where(p => p.UserId == user.UserId)
@@ -105,6 +104,7 @@ namespace Melody.Controllers
 
         // Settings
         [SubscriptionAuthorize("Free","Bronze","Silver","Gold")]
+        //[Authorize(Policy = "Silver")]
         public IActionResult Settings(string lang = "en")
         {
             ViewData["SelectedLanguage"] = lang;

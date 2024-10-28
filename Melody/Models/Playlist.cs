@@ -14,6 +14,8 @@ namespace Melody.Models
         [ForeignKey("UserDetails")]
         public int UserId { get; set; }
 
+        public string CoverImagePath { get; set; } = "default-image.png"; // Default cover image path
+        
         // Relationships
         public UserDetails User { get; set; }
         public ICollection<PlaylistSong> PlaylistSongs { get; set; }
