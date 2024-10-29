@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Melody.Data;
-using Microsoft.Identity.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;

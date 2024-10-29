@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Podcast";
+}
+<style>
+    .podcast{
+        border-radius:25px;
+        background-color:#333;
+        padding:15px;
+    }
+</style>
+<div class="container">
+    @await Html.PartialAsync("_leftDiv")
+    <div class="div-right">
+        @await Html.PartialAsync("_rightDiv")
+        <div class="podcast">
+        </div>
+    </div>
+</div>
+

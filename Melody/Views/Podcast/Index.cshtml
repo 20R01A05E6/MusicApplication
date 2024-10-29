@@ -51,7 +51,7 @@
             {
                 <div class="Podcast-list">
                     <div class="Podcast-container">
-                        <a href="@Url.Action("Index", "Podcast", new { id = podcast.PodcastId })">
+                        <a href="@Url.Action("Podcast", "Podcast", new { id = podcast.PodcastId })">
                             <img src="~/images/@podcast.ImagePath" class="Podcast-image" alt="@podcast.Name" />
                         </a>
                         <h3>@podcast.Name</h3>
