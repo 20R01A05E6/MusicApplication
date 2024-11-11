@@ -22,6 +22,7 @@ namespace Melody.Controllers
             return View(await _context.Podcasts.ToListAsync());
         }
 
+        [SubscriptionAuthorize("Gold", "Silver")]
         public IActionResult Podcast(int? id)
         {
             if(id == null)

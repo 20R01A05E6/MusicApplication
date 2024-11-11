@@ -45,7 +45,7 @@
             color: white;
             background-color: #1db954;
             border-radius: 25px;
-            width: 8%;
+            width: auto;
             display: flex;
             justify-content: center;
             padding: 10px;
@@ -231,9 +231,10 @@
                 <a asp-action="AddSongs" asp-route-playlistId="@Model?.PlaylistId" class="btn">
                     Add Song
                 </a>
-                <a asp-action="RemoveSongs" asp-route-playlistId="@Model?.PlaylistId" class="btn">
-                    Remove Song
-                </a>
+                <button class="btn" id="remove-button" onclick="toggleRemoveMode()">Remove Song</button>
+                @* <a asp-action="RemoveSongs" asp-route-playlistId="@Model?.PlaylistId" class="btn">
+                Remove Song
+                </a> *@
             </div>
             <div class="list">
                 <div class="song-heading">
@@ -260,6 +261,8 @@
                             if (song != null)
                             {
                                 <div class="song-item">
+                                    <!-- Checkbox for selection -->
+                                    <input type="checkbox" class="song-select-checkbox" data-song-id="@song.SongId" style="display:none;" onchange="updateRemoveButton()">
                                     <div class="song-left">
                                         <span class="serial-number">@songNumber.</span>
                                         <img src="~/images/@(string.IsNullOrEmpty(song.Album?.ImagePath) ? "default-image.png" : song.Album.ImagePath)"
@@ -302,6 +305,88 @@
 </div>
 
 <script src="~/js/PlaySongJavaScript.js"></script>
+<script>
+    let removeMode = false;
+
+    function toggleRemoveMode() {
+        removeMode = !removeMode;
+        const checkboxes = document.querySelectorAll(".song-select-checkbox");
+        const removeButton = document.getElementById("remove-button");
+
+        if (removeMode) {
+            removeButton.textContent = "Remove Selected";
+            checkboxes.forEach(checkbox => {
+                checkbox.style.display = "block";
+                checkbox.checked = false;
+            });
+            updateRemoveButton();
+        } else {
+            removeButton.textContent = "Remove Song";
+            checkboxes.forEach(checkbox => {
+                checkbox.style.display = "none";
+                checkbox.checked = false;
+            });
+        }
+    }
+
+    function updateRemoveButton() {
+        const checkboxes = document.querySelectorAll(".song-select-checkbox:checked");
+        const removeButton = document.getElementById("remove-button");
+
+        // Enable or disable the "Remove Selected" button based on selection
+        removeButton.disabled = checkboxes.length === 0;
+    }
+
+    async function removeSelectedSongs() {
+        // Get selected song IDs
+        const selectedSongIds = Array.from(document.querySelectorAll(".song-select-checkbox:checked"))
+            .map(checkbox => checkbox.getAttribute("data-song-id"));
+
+        // Debugging output: Check if selectedSongIds is empty or populated
+        console.log("Selected Song IDs:", selectedSongIds);
+
+        // If no songs are selected, exit remove mode and return
+        if (selectedSongIds.length === 0) {
+            toggleRemoveMode();  // Exit remove mode
+            return;
+        }
+
+        // Fetch playlist ID from the model
+        const playlistId = @Model?.PlaylistId;
+
+        try {
+            // Send POST request to remove selected songs
+            const response = await fetch(`/Playlists/RemoveSelectedSongs?playlistId=${playlistId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(selectedSongIds)
+            });
+
+            // Debugging output: Check if the response is OK
+            console.log("Fetch Response:", response);
+
+            if (response.ok) {
+                location.reload(); // Reload the page to reflect updates
+            } else {
+                alert("Error removing songs. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error with fetch request:", error);
+            alert("Failed to remove songs due to a network error.");
+        }
+    }
+
+    // Event listener for the "Remove Selected" button
+    document.getElementById("remove-button").addEventListener("click", function () {
+        if (removeMode && this.textContent === "Remove Selected") {
+            removeSelectedSongs();
+        }
+    });
+
+
+</script>
 
 @* <script>
     let currentSong = null; // Keeps track of the currently playing song

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 namespace Melody.Models
 {
     public class Album
@@ -18,9 +19,11 @@ namespace Melody.Models
 
         [DataType(DataType.Date)]
         public DateTime ReleaseDate { get; set; }
+        public int? somecol { get; set; }   
 
         // Relationships
         public Artist Artist { get; set; }
         public ICollection<Song> Songs { get; set; }
+
     }
 }

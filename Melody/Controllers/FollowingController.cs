@@ -43,7 +43,7 @@ namespace Melody.Controllers
             var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null)
             {
-                return Unauthorized(new { success = false, message = "User not logged in" });
+                return RedirectToAction("Login","Signup");
             }
 
             int artistId = request.ArtistId;

@@ -188,9 +188,12 @@
                     {
                         <div class="Playlist-item">
                             <a href="@Url.Action("Playlist", "Playlists", new { id = playlist.PlaylistId })">
-                                <div class="image-container">
-                                    <img src="~/images/default-image.png" class="image" alt="@playlist.Name" />
-                                </div>
+                                @{
+                                    var imagePath = string.IsNullOrEmpty(playlist.CoverImagePath)
+                                    ? Url.Content("default-image.png")
+                                    : Url.Content(playlist.CoverImagePath);
+                                }
+                                <img src="~/images/@imagePath" class="image" alt="@playlist.Name" />
                             </a>
                             <div class="Playlist-name">@playlist.Name</div>
                         </div>

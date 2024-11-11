@@ -7,7 +7,10 @@ using System.Net.Mail;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
-using Melody.Filters;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Identity;
 
 namespace Melody.Controllers
 {
@@ -43,13 +46,16 @@ namespace Melody.Controllers
                     ModelState.AddModelError("Email", "A user with this email already exists.");
                     return View(model);
                 }
+                // Hash the password before saving it to the database
+                var passwordHasher = new PasswordHasher<UserDetails>();
+                var hashedPassword = passwordHasher.HashPassword(null, model.Password);
 
                 var newUser = new UserDetails
                 {
                     Firstname = model.Firstname,
                     Lastname = model.Lastname,
                     Email = model.Email,
-                    Password = model.Password, // Store plain text for now (hash in production)
+                    Password = hashedPassword, // Store plain text for now (hash in production)
                     SubscriptionType = "Free" // Default subscription type
                 };
 
@@ -88,37 +94,43 @@ namespace Melody.Controllers
                 ModelState.AddModelError("Email", "Email does not exist.");
                 return View();
             }
+            // Verify the hashed password
+            var passwordHasher = new PasswordHasher<UserDetails>();
+            var result = passwordHasher.VerifyHashedPassword(user, user.Password, Password);
 
-            if (user.Password != Password)
+            if (result == PasswordVerificationResult.Success)
             {
+                // Set session
+                HttpContext.Session.SetString("UserEmail", user.Email);
+                HttpContext.Session.SetInt32("UserId", user.UserId);
+                HttpContext.Session.SetString("SubscriptionType", user.SubscriptionType);
+                HttpContext.Session.SetString("ProfileImagePath", user.ProfileImagePath ?? "/images/user_logo.jpg");
+
+                // Optionally generate a JWT token
+                var token = GenerateJwtToken(user);
+                // Store the JWT token in a cookie (optional, we can also store in session)
+                Response.Cookies.Append("JwtToken", token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    Expires = DateTime.UtcNow.AddHours(1)
+                });
+
+                return RedirectToAction("Index", "Home");
+                // Return the token in the response body
+                //return Ok(new
+                //{
+                //    Token = token,
+                //    Message = "Login successful"
+                //});
+            }
+            else
+            {
+                // Password is incorrect
                 ModelState.AddModelError("Password", "Password did not match.");
                 return View();
             }
-
-            // Set session
-            HttpContext.Session.SetString("UserEmail", user.Email);
-            HttpContext.Session.SetInt32("UserId", user.UserId);
-            HttpContext.Session.SetString("SubscriptionType", user.SubscriptionType);
-            HttpContext.Session.SetString("ProfileImagePath", user.ProfileImagePath ?? "/images/user_logo.jpg");
-
-            // Optionally generate a JWT token
-            var token = GenerateJwtToken(user);
-
-            // Store the JWT token in a cookie (optional, we can also store in session)
-            Response.Cookies.Append("JwtToken", token, new CookieOptions
-            {
-                HttpOnly = true,
-                Secure=true,
-                SameSite =SameSiteMode.None,
-                Expires = DateTime.UtcNow.AddHours(1) // Set token expiration
-            });
-            return RedirectToAction("Index", "Home");
-            // Return the token in the response body
-            //return Ok(new
-            //{
-            //    Token = token,
-            //    Message = "Login successful"
-            //});
         }
 
         private string GenerateJwtToken(UserDetails user)
@@ -141,6 +153,29 @@ namespace Melody.Controllers
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public async Task GoogleSignin()
+        {
+            await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme,
+                new AuthenticationProperties
+                {
+                    RedirectUri = Url.Action("GoogleResponse", "Signup")
+                });
+        }
+
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            var claims = result.Principal?.Identities.FirstOrDefault()?.Claims.Select(claim => new
+            {
+                claim.Issuer,
+                claim.OriginalIssuer,
+                claim.Type,
+                claim.Value
+            });
+
+            return RedirectToAction("Index", "Home");
         }
 
 
@@ -182,7 +217,6 @@ namespace Melody.Controllers
                 return RedirectToAction("Subscription");
             }
 
-            // Handle unauthorized case (session expired, user not logged in, etc.)
             return Unauthorized();
         }
 
@@ -201,14 +235,19 @@ namespace Melody.Controllers
             var user = await _context.UserDetails.FirstOrDefaultAsync(u => u.Email == model.Email);
             if (user != null)
             {
-                string pass = RandomPassword();
+                // Generate a new password
+                string newPassword = RandomPassword();
 
-                user.Password = pass;
-                _context.SaveChanges();
+                // Hash the new password
+                var passwordHasher = new PasswordHasher<UserDetails>();
+                user.Password = passwordHasher.HashPassword(user, newPassword);
 
-                string email = user.Email;
+                _context.Update(user);
+                await _context.SaveChangesAsync();
 
-                SendResetPasswordEmail(email, pass);
+                // Send the new password to the user's email
+                SendResetPasswordEmail(user.Email, newPassword);
+
                 return RedirectToAction("Login");
             }
             else
@@ -217,6 +256,7 @@ namespace Melody.Controllers
             }
             return View();
         }
+
 
         private void SendResetPasswordEmail(string email, string newPassword)
         {

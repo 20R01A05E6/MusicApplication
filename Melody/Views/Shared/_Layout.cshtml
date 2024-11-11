@@ -16,4 +16,37 @@
 @await RenderSectionAsync("Scripts", required: false)
 
 </html>
+<script>
+    // Create a custom cursor element
+    const glowCursor = document.createElement("div");
+    glowCursor.id = "glow-cursor";
+    document.body.appendChild(glowCursor);
+
+    // Move the custom cursor with the mouse
+    document.addEventListener("mousemove", (e) => {
+        glowCursor.style.left = `${e.pageX - glowCursor.offsetWidth / 2}px`;
+        glowCursor.style.top = `${e.pageY - glowCursor.offsetHeight / 2}px`;
+    });
+
+    // Optional: Add a scaling effect on mouse click
+    document.addEventListener("mousedown", () => {
+        glowCursor.style.transform = "scale(1.5)";
+    });
+    document.addEventListener("mouseup", () => {
+        glowCursor.style.transform = "scale(1)";
+    });
+
+
+    //Disable the inspect option in the webpage
+    // document.addEventListener('contextmenu', function (e) {
+    //     e.preventDefault();
+    // });
+    // document.onkeydown = function (e) {
+    //     if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+    //         e.preventDefault();
+    //     }
+    // };
+
+</script>
+
 <script src="https://kit.fontawesome.com/540ce77472.js" crossorigin="anonymous"></script>

@@ -148,11 +148,13 @@
 
             <div class="social-signup">
                 <p>----------------- Or -----------------</p>
-                <button class="btn-social google">
-                    <img src="~/images/google-logo.png" alt="Google" /> Signin With Google
-                </button>
+                <a asp-controller="Signup" asp-action="GoogleSignin" style="text-decoration:none">
+                    <button class="btn-social google">
+                        <img src="~/images/google-logo.png" alt="Google" /> Sign in With Google
+                    </button>
+                </a>
                 <button class="btn-social facebook">
-                    <img src="~/images/facebook-logo.png" alt="Facebook" /> Signin With Facebook
+                    <img src="~/images/facebook-logo.png" alt="Facebook" /> Sign in With Facebook
                 </button>
             </div>
         </div>

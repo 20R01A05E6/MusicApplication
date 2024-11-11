@@ -11,6 +11,7 @@
       "enabled": true,
       "renameLocals": true
     },
+    "debug": false,
     "includeInProject": true
   },
   {
@@ -22,6 +23,7 @@
       "enabled": true,
       "renameLocals": true
     },
-    "includeInProject": false
+    "includeInProject": false,
+    "debug": false
   }
 ]

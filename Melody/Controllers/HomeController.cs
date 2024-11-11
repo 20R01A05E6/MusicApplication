@@ -2,6 +2,7 @@ using Melody.Data;
 using Melody.Filters;
 using Melody.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 namespace Melody.Controllers
@@ -303,7 +304,11 @@ namespace Melody.Controllers
             }
 
             // Check if the old password matches
-            if (user.Password != OldPassword)
+            // Verify the hashed password
+            var passwordHasher = new PasswordHasher<UserDetails>();
+            var result = passwordHasher.VerifyHashedPassword(user, user.Password, OldPassword);
+
+            if (result == PasswordVerificationResult.Failed)
             {
                 ViewBag.OldPasswordError = "Old password is incorrect.";
                 return View();
@@ -317,7 +322,7 @@ namespace Melody.Controllers
             }
 
             // Update the password
-            user.Password = NewPassword;
+            user.Password = passwordHasher.HashPassword(user,NewPassword);
 
             _context.SaveChanges();
 

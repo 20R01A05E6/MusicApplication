@@ -2,14 +2,16 @@
     ViewData["Title"] = "AccessDenied";
 }
 <style>
-    .Access-Denied{
-        border-radius:25px;
-        background-color:#333;
-        padding:15px;
-        width:auto;
-        height:auto;
-        display:flex;
-        justify-content:center;
+    .Access-Denied {
+        border-radius: 25px;
+        background-color: #333;
+        padding: 15px;
+        width: auto;
+        height: auto;
+        display: flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content: center;
     }
 </style>
 <div class="container">
@@ -17,7 +19,10 @@
     <div class="div-right">
         @await Html.PartialAsync("_rightDiv")
         <div class="Access-Denied">
-            <h1>Access Denied</h1>
+            <h1 style="color:red">Access Denied</h1><br />
+            <a asp-controller="Signup" asp-action="Subscription" style="color:white">
+                <h3>Upgrade your subscription</h3>
+            </a>
         </div>
     </div>
 </div>

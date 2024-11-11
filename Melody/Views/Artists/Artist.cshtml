@@ -594,8 +594,14 @@
 
     function toggleFollow() {
         const followText = document.getElementById('follow-text');
-        const artistId = '@Model.ArtistId'; // Artist ID from the server
+        const artistId = '@Model.ArtistId';
         const userId = '@Context.Session.GetInt32("UserId")';
+
+        if (!userId || userId === 'null') {
+            // Redirect to the Login page if the user is not logged in
+            window.location.href = '/Signup/Login';
+            return;
+        }
 
         fetch('/Following/ToggleFollow', {
             // Making an AJAX call to save the playlist in the database

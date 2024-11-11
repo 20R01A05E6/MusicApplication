@@ -3,6 +3,8 @@ using Melody.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,22 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MelodyContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("mvcapplication")
     ?? throw new InvalidOperationException("Connection string 'MelodyContext' not found.")));
+
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme; // Set the sign-in scheme to cookies
+})
+    .AddCookie()
+    .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+    {
+        options.ClientId = builder.Configuration["GoogleKeys:ClientId"];
+        options.ClientSecret = builder.Configuration["GoogleKeys:ClientSecret"];
+        options.CallbackPath = "/Signup/signin-google";
+    });
+
 
 // Add session services
 builder.Services.AddSession(options =>

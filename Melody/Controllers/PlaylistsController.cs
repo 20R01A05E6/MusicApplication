@@ -44,7 +44,7 @@ namespace Melody.Controllers
 
             if (userId == null)
             {
-                return Unauthorized(new { success = false, message = "User is not logged in." });
+                return RedirectToAction("Login", "Signup");
             }
 
             if (string.IsNullOrEmpty(model.Name) || model.Name.Length > 100)
@@ -243,6 +243,34 @@ namespace Melody.Controllers
 
             return RedirectToAction("Playlist", new { id = playlistId });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveSelectedSongs(int playlistId, [FromBody] List<int> songIds)
+        {
+            // Validate if songIds is null or empty
+            if (songIds == null || songIds.Count == 0)
+            {
+                return BadRequest("No songs selected for removal.");
+            }
+
+            // Log for debugging: Check incoming data
+            Console.WriteLine($"Playlist ID: {playlistId}, Song IDs: {string.Join(", ", songIds)}");
+
+            // Retrieve the songs in the playlist that need to be removed
+            var playlistSongs = _context.PlaylistSongs
+                                         .Where(ps => ps.PlaylistId == playlistId && songIds.Contains(ps.SongId))
+                                         .ToList();
+
+            if (playlistSongs.Any())
+            {
+                _context.PlaylistSongs.RemoveRange(playlistSongs);
+                await _context.SaveChangesAsync();
+                return Ok(); // Return success response
+            }
+
+            return NotFound("Songs not found in the playlist.");
+        }
+
 
 
         /*[HttpGet]

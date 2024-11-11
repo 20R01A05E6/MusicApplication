@@ -16,8 +16,20 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    cursor:none;
 }
-
+/* Custom glowing cursor */
+#glow-cursor {
+    position: absolute;
+    width: 20px; /* Cursor size */
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.7); /* Glow color */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
+    pointer-events: none; /* Prevent cursor interaction */
+    transition: transform 0.1s ease-out;
+    z-index: 1000;
+}
 .container {
     display: flex;
     width: auto; /* Take full viewport width */

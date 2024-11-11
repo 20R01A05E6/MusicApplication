@@ -149,13 +149,16 @@
     }
 
     .modal-content {
-        background-color: black;
+        background-color: #323232;
         padding: 20px;
         border-radius: 25px;
         text-align: center;
         width: 300px;
     }
-
+    .modal-content h3{
+        margin-top:0px;
+        margin-bottom:10px;
+    }
     .playlist-input {
         width: 90%;
         padding: 10px;
@@ -249,6 +252,7 @@
     // Function to create playlist
     function createPlaylist() {
         const playlistName = document.getElementById('playlistName').value;
+        
 
         if (playlistName) {
             // Making an AJAX call to save the playlist in the database
@@ -286,48 +290,3 @@
         }
     });
 </script>
-
-@* <script>
-    // Open modal and blur background
-    document.getElementById('openCreateModal').addEventListener('click', function () {
-        document.getElementById('createPlaylistModal').style.display = 'flex';
-        document.querySelector('.div-left').classList.add('blurred');
-    });
-
-    // Close modal
-    document.getElementById('closeModalBtn').addEventListener('click', function () {
-        document.getElementById('createPlaylistModal').style.display = 'none';
-        document.querySelector('.div-left').classList.remove('blurred');
-    });
-
-    // Create playlist
-    document.getElementById('createPlaylistBtn').addEventListener('click', function () {
-        const playlistName = document.getElementById('playlistName').value;
-
-        if (playlistName) {
-            // Making an AJAX call to save the playlist in the database
-            fetch('/api/Playlists', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name: playlistName })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Redirect to the new playlist page
-                        window.location.href = `/Playlists/Index/${data.PlaylistId}`;
-                    } else {
-                        alert('Error creating playlist');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        } else {
-            alert('Please enter a playlist name.');
-        }
-    });
-
-</script> *@

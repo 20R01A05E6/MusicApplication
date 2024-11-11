@@ -6,14 +6,14 @@
     .container .div-right .Artists,
     .container .div-right .Albums,
     .container .div-right .Podcasts {
-        display:flex;
-        flex-direction:column;
+        display: flex;
+        flex-direction: column;
         background-color: #333;
         border-radius: 25px;
         height: auto;
-        width: auto; 
-        gap:10px;
-        padding-bottom:20px;
+        width: auto;
+        gap: 10px;
+        padding-bottom: 20px;
     }
 
         .container .div-right .Artists .Title-container,
@@ -21,7 +21,7 @@
         .container .div-right .Podcasts .Title-container {
             display: flex;
             flex-direction: row;
-            justify-content:space-between;
+            justify-content: space-between;
             height: 30px;
         }
 
@@ -59,15 +59,15 @@
 
     .Artists-list,
     .Albums-list,
-    .Podcasts-list{
+    .Podcasts-list {
         width: 120px;
         border-radius: 25px;
         height: 120px;
         background-color: black;
         margin: 7px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         position: relative; /* Needed for hover title positioning */
     }
 
@@ -85,7 +85,30 @@
         border-radius: 25px;
         object-fit: cover;
         border: 2px solid #5fd068;
+        animation: borderColorChange 2s infinite;
     }
+
+    /* @@keyframes borderColorChange {
+        0% {
+            border-color: #5fd068;
+        }
+
+        25% {
+            border-color: #ff6f61;
+        }
+
+        50% {
+            border-color: #42a5f5;
+        }
+
+        75% {
+            border-color: #ffa726;
+        }
+
+        100% {
+            border-color: #5fd068;
+        }
+    } */
 
     .Artists-list .image-container .image {
         width: 100px;
@@ -98,7 +121,7 @@
     .card {
         width: 120px;
         height: 120px;
-        margin:7px;
+        margin: 7px;
         background: linear-gradient(135deg, #6a00f4, #38ef7d); /* Gradient background */
         border-radius: 25px;
         display: flex;
@@ -106,7 +129,7 @@
         justify-content: center;
         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Adding shadow for depth */
         color: white;
-        margin-left:10px;
+        margin-left: 10px;
     }
 
         .card h3 {
@@ -117,7 +140,7 @@
     /* Hidden artist name that appears on hover */
     .Artist-name,
     .Album-name,
-    .Podcast-name{
+    .Podcast-name {
         position: absolute;
         bottom: -20px; /* Position below the artist image */
         text-align: center;
@@ -129,7 +152,7 @@
     }
 
     .Artists-list:hover .Artist-name,
-    .Albums-list:hover .Album-name ,
+    .Albums-list:hover .Album-name,
     .Podcasts-list:hover .Podcast-name {
         opacity: 1;
     }
