@@ -14,7 +14,7 @@ builder.Services.AddDbContext<MelodyContext>(options =>
     ?? throw new InvalidOperationException("Connection string 'MelodyContext' not found.")));
 
 
-builder.Services.AddAuthentication(options =>
+/*builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
@@ -26,7 +26,7 @@ builder.Services.AddAuthentication(options =>
         options.ClientId = builder.Configuration["GoogleKeys:ClientId"];
         options.ClientSecret = builder.Configuration["GoogleKeys:ClientSecret"];
         options.CallbackPath = "/Signup/signin-google";
-    });
+    });*/
 
 
 // Add session services
