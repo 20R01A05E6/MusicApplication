@@ -2,7 +2,16 @@
   "dependencies": {
     "mssql1": {
       "type": "mssql",
-      "connectionId": "ConnectionStrings:MelodyContext"
+      "connectionId": "ConnectionStrings:MelodyContext",
+      "dynamicId": null
+    },
+    "identityapp1": {
+      "type": "identityapp"
+    },
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:mvcapplication",
+      "dynamicId": null
     }
   }
 }

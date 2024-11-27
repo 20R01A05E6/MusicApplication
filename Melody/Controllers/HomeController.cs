@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 namespace Melody.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly MelodyContext _context;

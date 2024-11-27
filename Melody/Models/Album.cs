@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 namespace Melody.Models
 {
     public class Album

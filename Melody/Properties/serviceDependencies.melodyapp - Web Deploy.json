@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "mssql2": {
+      "serviceConnectorResourceId": "",
+      "secretStore": "AzureAppSettings",
+      "type": "mssql.onprem",
+      "connectionId": "ConnectionStrings:mvcapplication",
+      "dynamicId": null
+    },
+    "mssql1": {
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:MelodyContext",
+      "dynamicId": null
+    },
+    "identityapp1": {
+      "ignored": "true",
+      "type": "identityapp"
+    }
+  }
+}
