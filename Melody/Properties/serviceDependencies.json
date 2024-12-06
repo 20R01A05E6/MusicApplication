@@ -7,11 +7,6 @@
     },
     "identityapp1": {
       "type": "identityapp"
-    },
-    "mssql2": {
-      "type": "mssql",
-      "connectionId": "ConnectionStrings:mvcapplication",
-      "dynamicId": null
     }
   }
 }
