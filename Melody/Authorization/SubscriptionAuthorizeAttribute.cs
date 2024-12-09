@@ -1,4 +1,4 @@
-﻿/*using Melody.Data;
+﻿using Melody.Data;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,10 +33,9 @@ namespace Melody.Authorization
                 // Check if the user exists and has an allowed subscription type
                 if (user == null || !_subscriptionTypes.Contains(user.SubscriptionType))
                 {
-                    context.Result = new RedirectToActionResult("AccessDenied","Signup",null); // Or redirect to an access denied page
+                    context.Result = new RedirectToActionResult("AccessDenied", "Signup", null); // Or redirect to an access denied page
                 }
             }
         }
     }
 }
-*/

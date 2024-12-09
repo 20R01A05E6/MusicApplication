@@ -3,11 +3,12 @@ using Melody.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure DbContext
-builder.Services.AddDbContext<MelodyContext>(options =>
+builder.Services.AddDbContextPool<MelodyContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("mvcapplication")
     ?? throw new InvalidOperationException("Connection string 'MelodyContext' not found.")));
 
@@ -79,6 +80,11 @@ builder.Services.AddAuthorization(options =>
 
 //builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme);
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Signup/Login"; // Redirect to login page
+    });
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
